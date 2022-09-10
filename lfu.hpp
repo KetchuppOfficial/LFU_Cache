@@ -43,35 +43,25 @@ public:
 
     bool is_full () const { return (size() == size_); }
 
-    template <typename F> auto lookup_update (const Key_T key, const F &slow_get_page)
-    {
-        auto hit = hash_table_.find (key);
-
-        if (hit == hash_table_.end ())
-            return request_page (key, slow_get_page)->page;
-        else
-            return access_cached (hit)->page;
-    }
-
-    template <typename F> auto lookup_update (const Key_T key, const F &slow_get_page, bool &is_hit)
+    template <typename F> bool lookup_update (const Key_T key, const F &slow_get_page)
     {
         auto hit = hash_table_.find (key);
 
         if (hit == hash_table_.end ())
         {
-            is_hit = false;
-            return request_page (key, slow_get_page)->page;
+            request_page (key, slow_get_page);
+            return false;
         }
         else
         {
-            is_hit = true;
-            return access_cached (hit)->page;
+            access_cached (hit);
+            return true;
         }
     }
 
 private:
 
-    template <typename F> auto request_page (const Key_T key, const F &slow_get_page)
+    template <typename F> void request_page (const Key_T key, const F &slow_get_page)
     {
         auto lfu_freq_node = freq_list_.begin ();
 
@@ -88,13 +78,10 @@ private:
         auto &lfu_list = lfu_freq_node->node_list;  
         lfu_list.push_front ({slow_get_page (key), key, lfu_freq_node});
 
-        auto new_page = lfu_list.begin ();
-        hash_table_[key] = new_page;
-
-        return new_page;
+        hash_table_[key] = lfu_list.begin ();
     }
 
-    auto access_cached (const Hash_Iter hit)
+    void access_cached (const Hash_Iter hit)
     {
         auto page      = hit->second;
         auto freq      = page->parent;
@@ -109,8 +96,6 @@ private:
 
         if (freq->node_list.size () == 0)
             freq_list_.erase (freq);
-
-        return page;
     }
 };
 
