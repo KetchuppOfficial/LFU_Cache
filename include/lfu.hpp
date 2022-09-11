@@ -66,7 +66,7 @@ private:
     {
         auto lfu_freq_node = freq_list_.begin ();
 
-        if (is_full())
+        if (is_full ())
         {
             auto lfu_node = lfu_freq_node->node_list.begin ();
             hash_table_.erase (lfu_node->key);
