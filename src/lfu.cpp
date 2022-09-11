@@ -10,7 +10,7 @@ int slow_get_page (int key) { return key; }
 
 int main ()
 {
-    size_t cache_size {};
+    std::size_t cache_size {};
     std::cin >> cache_size;
 
     Caches::LFU<int> cache {cache_size};
