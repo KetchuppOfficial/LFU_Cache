@@ -1,7 +1,5 @@
-#include "lfu.hpp"
 #include <iostream>
-#include <string>
-#include <limits>
+#include "lfu.hpp"
 
 namespace Caches
 {
