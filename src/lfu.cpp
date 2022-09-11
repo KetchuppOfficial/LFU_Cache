@@ -4,10 +4,7 @@
 namespace Caches
 {
 
-int slow_get_page (int key)
-{
-    return key++;
-}
+int slow_get_page (int key) { return key; }
 
 }
 
