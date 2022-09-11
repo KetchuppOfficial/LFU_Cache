@@ -10,7 +10,8 @@ namespace Caches
 
 template <typename Page_T, typename Key_T = int> class LFU
 {   
-    std::size_t size_;
+    std::size_t capacity_;
+    std::size_t size_ = 0;
     
     struct Freq_Node;
     using Freq_Iter = typename std::list<Freq_Node>::iterator;
@@ -37,11 +38,11 @@ template <typename Page_T, typename Key_T = int> class LFU
     
 public:
 
-    LFU (std::size_t size) : size_{size} {}
+    LFU (std::size_t capacity) : capacity_{capacity} {}
 
-    std::size_t size () const { return freq_list_.size (); }
+    std::size_t size () const { return size_; }
 
-    bool is_full () const { return (size() == size_); }
+    bool is_full () const { return (size_ == capacity_); }
 
     template <typename F> bool lookup_update (const Key_T key, const F &slow_get_page)
     {
@@ -50,6 +51,7 @@ public:
         if (hit == hash_table_.end ())
         {
             request_page (key, slow_get_page);
+            size_++;
             return false;
         }
         else
@@ -76,9 +78,9 @@ private:
             lfu_freq_node = freq_list_.insert (lfu_freq_node, {1});
 
         auto &lfu_list = lfu_freq_node->node_list;  
-        lfu_list.push_front ({slow_get_page (key), key, lfu_freq_node});
+        lfu_list.push_back ({slow_get_page (key), key, lfu_freq_node});
 
-        hash_table_[key] = lfu_list.begin ();
+        hash_table_[key] = std::prev (lfu_list.end ());
     }
 
     void access_cached (const Hash_Iter hit)
