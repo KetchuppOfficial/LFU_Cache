@@ -51,7 +51,6 @@ public:
         if (hit == hash_table_.end ())
         {
             request_page (key, slow_get_page);
-            size_++;
             return false;
         }
         else
@@ -72,15 +71,17 @@ private:
             auto lfu_node = lfu_freq_node->node_list.begin ();
             hash_table_.erase (lfu_node->key);
             lfu_freq_node->node_list.erase (lfu_node);
+            size_--;
         }
 
         if (lfu_freq_node->counter != 1)
             lfu_freq_node = freq_list_.insert (lfu_freq_node, {1});
 
-        auto &lfu_list = lfu_freq_node->node_list;  
-        lfu_list.push_back ({slow_get_page (key), key, lfu_freq_node});
+        auto &lfu_list = lfu_freq_node->node_list;
 
+        lfu_list.push_back ({slow_get_page (key), key, lfu_freq_node});
         hash_table_[key] = std::prev (lfu_list.end ());
+        size_++;
     }
 
     void access_cached (const Hash_Iter hit)
