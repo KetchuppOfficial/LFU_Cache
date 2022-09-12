@@ -91,7 +91,7 @@ private:
         auto next_freq = std::next (freq);
 
         if (next_freq == freq_list_.end () || next_freq->counter != freq->counter + 1)
-            next_freq = freq_list_.insert (next_freq, {freq->counter});
+            next_freq = freq_list_.insert (next_freq, {freq->counter + 1});
 
         auto &next_list = next_freq->node_list;
         next_list.splice (next_list.end (), freq->node_list, page);
