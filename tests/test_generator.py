@@ -2,7 +2,7 @@ import random
 import numpy as np
 import sys
 
-def generate_tests (n_tests: int):
+def generate_tests (n_tests: int, output_dir):
 
     for test_i in range (n_tests):
 
@@ -15,7 +15,7 @@ def generate_tests (n_tests: int):
         normal      = np.random.normal(0, 15, n_keys)
         gamma       = np.random.gamma(1, 50, n_keys)
 
-        with open(f"test_{test_i}", "w") as test_file:
+        with open(f"./{output_dir}/test_{test_i}.txt", "w") as test_file:
 
             test_file.write(str(cache_size) + "\n" + str(n_keys * 5) + "\n")
 
@@ -26,6 +26,7 @@ def generate_tests (n_tests: int):
 def main ():
 
     n_tests: int = int(sys.argv[1])
-    generate_tests(n_tests)
+    output_dir = str(sys.argv[2])
+    generate_tests(n_tests, output_dir)
 
 main ()
