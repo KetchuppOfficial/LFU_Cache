@@ -1,6 +1,6 @@
 # HWC - caches
 
-This project is the first task on course "Uses and applications of the C++ language" by K.I. Vladimirov. The task was to implement one of suggested cache replacement algorithms. I chose LFU cache.
+This project is the first task on course "Uses and applications of the C++ language" by [K.I.Vladimirov](https://github.com/tilir). The task was to implement one of suggested cache replacement algorithms. I chose LFU cache.
 
 ## Project structure
 
@@ -12,7 +12,7 @@ This project is the first task on course "Uses and applications of the C++ langu
     cd LFU_Cache
 ```
 
-## How to test
+## How to generate tests
 
 Let (N) be the number of tests you want to run, then command sequence:
 ```
