@@ -33,11 +33,11 @@ int main (int argc, char *argv[])
     int n_hits {};
     for (auto key_i = 0; key_i < n_keys; key_i++)
     {
-        int page {};
-        input >> page;
+        int key {};
+        input >> key;
         assert (!input.eof ());
 
-        n_hits += cache.lookup_update(page, Caches::slow_get_page);
+        n_hits += cache.lookup_update(key, Caches::slow_get_page);
     }
 
     std::ofstream output {output_name, std::ios::out};

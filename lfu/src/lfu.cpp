@@ -24,11 +24,11 @@ int main ()
     int n_hits {};
     for (auto key_i = 0; key_i < n_keys; key_i++)
     {
-        int page {};
-        std::cin >> page;
+        int key {};
+        std::cin >> key;
         assert (std::cin.good ());
 
-        n_hits += cache.lookup_update(page, Caches::slow_get_page);
+        n_hits += cache.lookup_update(key, Caches::slow_get_page);
     }
 
     std::cout << n_hits << std::endl;
