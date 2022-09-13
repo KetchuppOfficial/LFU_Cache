@@ -10,4 +10,4 @@ aux_source_directory(./src SRC_LIST)
 add_executable(Ideal_Cache ${SRC_LIST})
 
 target_include_directories(Ideal_Cache
-                           PRIVATE ./include)
+                           PRIVATE ../include)
