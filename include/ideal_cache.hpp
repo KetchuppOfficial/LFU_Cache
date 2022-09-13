@@ -7,6 +7,11 @@
 #include <iostream>
 #include <vector>
 
+enum Next
+{
+    no_next = -1
+};
+
 namespace Caches
 {
 
@@ -20,7 +25,7 @@ template <typename Page_T, typename Key_T = int> class Ideal_Cache
     {
         Page_T page;
         Key_T key;
-        std::size_t next_app;
+        int next_app;
     };
 
     using Page_Iter = typename std::list<Page_Node>::iterator;
@@ -28,8 +33,6 @@ template <typename Page_T, typename Key_T = int> class Ideal_Cache
     std::list<Page_Node> page_list_;
     std::unordered_map<Key_T, Page_Iter> hash_table_;
     std::vector<std::pair<Key_T, int>> data_;
-
-    const int no_next_ = -1;
 
 public:
 
@@ -40,7 +43,7 @@ public:
             Key_T key {};
             std::cin >> key;
             
-            std::pair<Key_T, int> pair {key, no_next_};
+            std::pair<Key_T, int> pair {key, static_cast<int>(no_next)};
             data_.push_back(pair);
         }
 
@@ -61,8 +64,10 @@ public:
 
     bool is_full () const { return (size_ == capacity_); }
 
-    template <typename F> bool lookup_update (const Key_T key, const F &slow_get_page)
+    template <typename F> bool lookup_update (const F &slow_get_page)
     {
+        Key_T key {data_[page_i].first};
+        
         auto hit = hash_table_.find (key);
 
         if (hit == hash_table_.end ())
@@ -74,7 +79,7 @@ public:
                 auto farthest_iter = node_iter;
                 for (; node_iter != page_list_.end(); node_iter++)
                 {
-                    if (node_iter->next_app == no_next_)
+                    if (node_iter->next_app == static_cast<int>(no_next))
                     {
                         farthest_iter = node_iter;
                         break;
