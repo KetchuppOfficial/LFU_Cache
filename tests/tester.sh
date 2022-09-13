@@ -16,7 +16,7 @@ else
         rm -rf ${test_dir}
         rm -rf ${ans_dir}
         
-        echo "Generatin tests..."
+        echo "Generating tests..."
         mkdir ${test_dir}
         python3 test_generator.py ${n_files} ${test_dir}
 
