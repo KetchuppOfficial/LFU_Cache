@@ -21,5 +21,11 @@ int main ()
 
     Caches::Ideal_Cache<int> cache {cache_size, n_keys};
 
+    int n_hits {};
+    for (auto key_i = 0; key_i < n_keys; key_i++)
+        n_hits += cache.lookup_update(Caches::slow_get_page);
+    
+    std::cout << n_hits << std::endl;
+
     return 0;
 }
