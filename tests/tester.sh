@@ -47,7 +47,7 @@ else
         echo "Generating answers..."
         for ((i = 0; i < ${n_tests}; i++))
         do
-            ./LFU_Naive ../../tests/${test_dir}/test_${i}.txt ../../tests/${ans_dir}/answer_${i}.txt
+            ./LFU_Naive < ../../tests/${test_dir}/test_${i}.txt > ../../tests/${ans_dir}/answer_${i}.txt
         done
         echo -en "\n"
 
