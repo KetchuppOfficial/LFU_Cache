@@ -19,4 +19,4 @@ Let (N) be the number of tests you want to run, then command sequence:
     cd tests
     ./tester.sh (N)
 ```
-will generate (N) tests, build naive LFU cache and run it on the tests to compute answers.
+generates (N) tests, builds naive LFU cache and runs it on the tests to compute answers. After that O(1) LFU cache is run on those tests to compute its own answers. Finally, both sets of answers are compared. If any O(1)-answer differs from that of the naive implementation, then the test is considered "failed". It is considered "passed" otherwise.
