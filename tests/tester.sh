@@ -4,6 +4,19 @@ green="\033[1;32m"
 red="\033[1;31m"
 default="\033[0m"
 
+function Build
+{
+    cmake -B build
+    cd build
+    cmake --build .
+}
+
+function Mkdir
+{
+    rm -rf $1
+    mkdir $1
+}
+
 if [ $# -ne 1 ]
 then
     echo "Testing script requires only 1 argument (number of tests)"
@@ -18,13 +31,9 @@ else
         ans_dir="answers"
         res_dir="results"
         
-        rm -rf ${test_dir}
-        rm -rf ${ans_dir}
-        rm -rf ../lfu/${res_dir}
-
-        mkdir ${ans_dir}
-        mkdir ${test_dir}
-        mkdir ../lfu/${res_dir}
+        Mkdir ${test_dir}
+        Mkdir ${ans_dir}
+        Mkdir ../lfu/${res_dir}
         
         echo "Generating tests..."
         python3 test_generator.py ${n_tests} ${test_dir}
@@ -32,9 +41,7 @@ else
 
         echo "Building naive LFU..."
         cd ../lfu_naive
-        cmake -B build
-        cd build
-        cmake --build .
+        Build
         echo -en "\n"
 
         echo "Generating answers..."
@@ -46,9 +53,7 @@ else
 
         echo "Building O(1) LFU..."
         cd ../../lfu
-        cmake -B build
-        cd build
-        cmake --build .
+        Build
         echo -en "\n"
 
         echo "Testing..."
