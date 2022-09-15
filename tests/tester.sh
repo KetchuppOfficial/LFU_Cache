@@ -1,5 +1,9 @@
 #!/bin/bash
 
+green="\033[1;32m"
+red="\033[1;31m"
+default="\033[0m"
+
 if [ $# -ne 1 ]
 then
     echo "Testing script requires only 1 argument (number of tests)"
@@ -8,28 +12,57 @@ else
     then
         echo "The number of tests has to be at least 1"
     else
-        n_files=$1
+        n_tests=$1
 
         test_dir="tests"
         ans_dir="answers"
+        res_dir="results"
         
         rm -rf ${test_dir}
         rm -rf ${ans_dir}
+        rm -rf ../lfu/${res_dir}
+
+        mkdir ${ans_dir}
+        mkdir ${test_dir}
+        mkdir ../lfu/${res_dir}
         
         echo "Generating tests..."
-        mkdir ${test_dir}
-        python3 test_generator.py ${n_files} ${test_dir}
+        python3 test_generator.py ${n_tests} ${test_dir}
+        echo -en "\n"
 
         echo "Building naive LFU..."
-        cmake ../lfu_naive -B ../lfu_naive/build
-        cmake --build ../lfu_naive/build
+        cd ../lfu_naive
+        cmake -B build
+        cd build
+        cmake --build .
+        echo -en "\n"
 
         echo "Generating answers..."
-        mkdir ${ans_dir}
-        cd ../lfu_naive/build
-        for ((i = 0; i < $1; i++))
+        for ((i = 0; i < ${n_tests}; i++))
         do
             ./LFU_Naive ../../tests/${test_dir}/test_${i}.txt ../../tests/${ans_dir}/answer_${i}.txt
+        done
+        echo -en "\n"
+
+        echo "Building O(1) LFU..."
+        cd ../../lfu
+        cmake -B build
+        cd build
+        cmake --build .
+        echo -en "\n"
+
+        echo "Testing..."
+        for ((i = 0; i < ${n_tests}; i++))
+        do
+            ./LFU_Cache < ../../tests/${test_dir}/test_${i}.txt > ../${res_dir}/result_${i}.txt
+
+            echo -n "Test $((i + 1)): "
+            if diff -Z ../../tests/${ans_dir}/answer_${i}.txt ../${res_dir}/result_${i}.txt > /dev/null
+            then
+                echo -e "${green}passed${default}"
+            else
+                echo -e "${red}failed${default}"
+            fi
         done
     fi
 fi
