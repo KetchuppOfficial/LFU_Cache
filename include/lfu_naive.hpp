@@ -22,6 +22,7 @@ template <typename Page_T, typename Key_T = int> class LFU_Naive
     std::vector<Node> cache_;
 
     using Cache_Iter = typename std::vector<Node>::iterator;
+    using Const_Cache_Iter = typename std::vector<Node>::const_iterator;
 
 public:
 
@@ -68,7 +69,7 @@ private:
         return cache_.end (); 
     }
 
-    Cache_Iter find_min_freq ()
+    Const_Cache_Iter find_min_freq () const
     {
         auto iter          = cache_.begin ();
         auto min_freq_iter = iter;
