@@ -20,7 +20,7 @@ Let **N** be the number of tests you want to run, then command sequence:
 ```bash
 ./tester.sh mode N
 ```
-generates **N** tests, builds naive cache and runs it on the tests to compute answers. After that fast cache is run on those tests to compute its own answers. Finally, both sets of answers are compared. If answers on the same test differ between naive and fast implementations, then this test is considered "failed". It is considered "passed" otherwise. **mode** argument has to be of one of 2 values only: "lfu" or "belady". It specifies what algorithm will be tested.
+generates **N** tests, builds naive cache and runs it on the tests to compute answers. After that fast cache is run on those tests to compute its own answers. Finally, both sets of answers are compared. If answers on the same test differ between naive and fast implementations, then this test is considered "failed". It is considered "passed" otherwise. **mode** argument has to be of one of 2 values only: **lfu** or **belady**. It specifies what algorithm will be tested.
 
 ## Comparison of algorithms
 
