@@ -24,7 +24,7 @@ function Mkdir
 
 function Test ()
 {
-    local fast="${1}"
+    local fast=$1
     local naive="${1}_naive"
     
     echo "Building naive version..."
@@ -33,7 +33,7 @@ function Test ()
     echo -en "\n"
 
     echo "Generating answers..."
-    for ((i = 0; i < ${n_tests}; i++))
+    for ((i = 0; i < $n_tests; i++))
     do
         ./$naive < ${common_test_dir}${test_dir}test_${i}.txt > ${common_test_dir}${ans_dir}_$1/answer_${i}.txt
     done
@@ -47,7 +47,7 @@ function Test ()
     echo -en "\n"
 
     echo "Testing..."
-    for ((i = 0; i < ${n_tests}; i++))
+    for ((i = 0; i < $n_tests; i++))
     do
         ./$fast < ${common_test_dir}${test_dir}test_${i}.txt > ${common_test_dir}${res_dir}_$1/result_${i}.txt
 
@@ -79,7 +79,7 @@ else
 
             echo "Generating tests..."
             n_tests=$2
-            python3 test_generator.py ${n_tests} ${test_dir}
+            python3 test_generator.py $n_tests $test_dir
             echo -en "\n"
             
             Mkdir "${ans_dir}_${mode}"
