@@ -31,24 +31,6 @@ public:
             if (!deque.empty ())
                 deque.pop_front ();
         }
-
-        #ifdef DUMP
-        // Occurence_Table state dump
-        std::cout << "***********************************" << std::endl;
-        std::for_each (table_.begin(), table_.end(),
-                       [](const std::pair<Key_T, std::deque<int>> &bucket)
-                       {
-                            auto &deque = bucket.second;
-                            std::cout << "KEY = " << bucket.first << "; N_ELEMS = " << deque.size () << std::endl;
-
-                            std::for_each (deque.begin (), deque.end (), 
-                                           [](const int &next_occurrence)
-                                           {
-                                                std::cout << "\tnext_occurrence = " << next_occurrence << std::endl;
-                                           });
-                       });
-        std::cout << "***********************************" << std::endl;
-        #endif
     }
 
     void add (const Key_T key, const int occurrence) { table_[key].push_back (occurrence); }
