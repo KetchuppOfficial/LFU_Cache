@@ -1,4 +1,4 @@
 build/
 tests/tests
-tests/answers
-results/
+tests/answers*
+tests/results*
