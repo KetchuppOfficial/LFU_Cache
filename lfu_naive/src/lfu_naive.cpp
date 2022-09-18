@@ -1,8 +1,6 @@
-#include "lfu_naive.hpp"
-
 #include <iostream>
-#include <fstream>
 #include <cassert>
+#include "lfu_naive.hpp"
 
 namespace Caches
 {
