@@ -65,7 +65,7 @@ function Test ()
 
 if [ $# -ne 2 ]
 then
-    echo "Testing script requires exactly 2 argument"
+    echo "Testing script requires exactly 2 arguments"
 else
     if [ $2 -le 0 ]
     then
