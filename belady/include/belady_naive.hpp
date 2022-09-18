@@ -1,5 +1,5 @@
-#ifndef IDEAL_CACHE_NAIVE_HPP
-#define IDEAL_CACHE_NAIVE_HPP
+#ifndef BELADY_NAIVE_HPP
+#define BELADY_NAIVE_HPP
 
 #include <vector>
 #include <iterator>

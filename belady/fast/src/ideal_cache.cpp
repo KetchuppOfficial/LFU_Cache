@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "ideal_cache_naive.hpp"
+#include "belady.hpp"
 
 namespace Caches
 {
@@ -29,7 +29,7 @@ int main ()
         keys_arr.push_back (key);
     }
 
-    Caches::Ideal_Cache_Naive<int> cache {cache_size, keys_arr.begin (), keys_arr.end ()};
+    Caches::Ideal_Cache<int> cache {cache_size, keys_arr.begin (), keys_arr.end ()};
 
     int n_hits {};
     for (auto key_i = 0; key_i < n_keys; key_i++)

@@ -1,5 +1,5 @@
-#ifndef IDEAL_CACHE_HPP
-#define IDEAL_CACHE_HPP
+#ifndef BELADY_HPP
+#define BELADY_HPP
 
 #include <list>
 #include <unordered_map>
@@ -172,4 +172,4 @@ private:
 
 } // namespace Caches
 
-#endif // IDEAL_CACHE_HPP
+#endif // BELADY_HPP
