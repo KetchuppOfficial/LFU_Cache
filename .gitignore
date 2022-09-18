@@ -1,6 +1,2 @@
 build/
-tests/tests
-tests/answers*
-tests/results*
-tests/belady/
-tests/lfu/
+*.txt
