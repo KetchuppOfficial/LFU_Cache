@@ -19,7 +19,17 @@ int main ()
     std::cin >> n_keys;
     assert (std::cin.good ());
 
-    Caches::Ideal_Cache<int> cache {cache_size, n_keys};
+    std::vector<int> keys_arr;
+    for (auto key_i = 0; key_i < n_keys; key_i++)
+    {
+        int key{};
+        std::cin >> key;
+        assert (std::cin.good ());
+
+        keys_arr.push_back (key);
+    }
+
+    Caches::Ideal_Cache<int> cache {cache_size, keys_arr.begin (), keys_arr.end ()};
 
     int n_hits {};
     for (auto key_i = 0; key_i < n_keys; key_i++)
