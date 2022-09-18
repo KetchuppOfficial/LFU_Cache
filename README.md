@@ -26,7 +26,7 @@ generates **N** tests, builds naive cache and runs it on the tests to compute an
 
 If you want to build a bar chart that compares results of two algorithms on the generated tests, go to [./tests](./tests/) directory.
 
-Let **N** be the number of tests you want to be represented in the bar chart, then command sequence:
+Let **N** be the number of tests, results on which you want to represented in a bar chart, then command sequence:
 ```bash
 ./graph_builder.sh N
 ```
