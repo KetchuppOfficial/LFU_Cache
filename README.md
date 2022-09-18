@@ -30,7 +30,7 @@ Let **N** be the number of tests, results on which you want to represented in a 
 ```bash
 ./graph_builder.sh N
 ```
-generated **N** tests, builds fast caches and runs them of those tests. After that a python script builds a bar chart based on the results of each cache in each test.
+generates **N** tests, builds fast caches and runs them of those tests. After that a python script builds a bar chart based on the results of each cache.
 
 Here is an example of a bar chart:
 ![bar_char](./tests/algorithm_comparison.png)
