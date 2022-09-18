@@ -12,6 +12,14 @@ git clone git@github.com:KetchuppOfficial/LFU_Cache.git
 cd LFU_Cache
 ```
 
+## Requirements
+
+The following applications have to be installed:
+
+1) CMake of version 3.16 (or higher)
+
+2) clang++
+
 ## How to generate tests
 
 If you want to run some tests, go to [./tests](./tests/) directory.
