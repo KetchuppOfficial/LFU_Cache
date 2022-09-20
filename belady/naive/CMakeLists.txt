@@ -4,6 +4,7 @@ project(belady_naive
         LANGUAGES CXX)
 
 set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_STANDARD 20)
 
 aux_source_directory(./src SRC_LIST)
 
