@@ -4,10 +4,6 @@
 #include <vector>
 #include <iterator>
 
-#ifdef DUMP
-#include <algorithm>
-#endif
-
 namespace Caches
 {
 
