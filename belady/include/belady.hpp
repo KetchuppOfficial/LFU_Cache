@@ -46,7 +46,7 @@ using Vector_Iter = typename std::vector<int>::iterator;
 template <typename Page_T, typename Key_T = int, typename Keys_Iter = Vector_Iter> 
 class Ideal_Cache
 {
-    std::size_t capacity_;
+    size_t capacity_;
 
     struct Page_Node
     {
@@ -66,10 +66,10 @@ class Ideal_Cache
 
 public:
 
-    Ideal_Cache (std::size_t capacity, Keys_Iter begin, Keys_Iter end)
+    Ideal_Cache (size_t capacity, Keys_Iter begin, Keys_Iter end)
                 : capacity_{capacity}, occurrence_table_{begin, end}, input_iter_{begin} {}
 
-    std::size_t size () const { return page_list_.size (); }
+    size_t size () const { return page_list_.size (); }
 
     bool is_full () const { return (size () == capacity_); }
 

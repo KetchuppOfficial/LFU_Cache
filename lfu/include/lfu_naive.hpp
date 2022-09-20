@@ -10,7 +10,7 @@ namespace Caches
 
 template <typename Page_T, typename Key_T = int> class LFU_Naive
 {
-    std::size_t capacity_;
+    size_t capacity_;
 
     struct Node
     {
@@ -26,9 +26,9 @@ template <typename Page_T, typename Key_T = int> class LFU_Naive
 
 public:
 
-    LFU_Naive (std::size_t capacity) : capacity_{capacity} {}
+    LFU_Naive (size_t capacity) : capacity_{capacity} {}
 
-    std::size_t size () const { return cache_.size(); }
+    size_t size () const { return cache_.size(); }
 
     bool is_full () const { return (size() == capacity_); }
 

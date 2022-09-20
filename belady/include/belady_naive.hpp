@@ -14,7 +14,7 @@ using Vector_Iter = typename std::vector<int>::iterator;
 template <typename Page_T, typename Key_T = int, typename Keys_Iter = Vector_Iter>
 class Ideal_Cache_Naive
 {
-    std::size_t capacity_;
+    size_t capacity_;
 
     struct Node
     {
@@ -31,10 +31,10 @@ class Ideal_Cache_Naive
 
 public:
 
-    Ideal_Cache_Naive (std::size_t capacity, Keys_Iter begin, Keys_Iter end)
+    Ideal_Cache_Naive (size_t capacity, Keys_Iter begin, Keys_Iter end)
                       : capacity_{capacity}, input_iter_{begin}, end_{end} {}
 
-    std::size_t size () const { return cache_.size (); }
+    size_t size () const { return cache_.size (); }
 
     bool is_full () const { return (size () == capacity_); }
 

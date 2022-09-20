@@ -10,8 +10,8 @@ namespace Caches
 
 template <typename Page_T, typename Key_T = int> class LFU
 {   
-    std::size_t capacity_;
-    std::size_t size_ = 0;
+    size_t capacity_;
+    size_t size_ = 0;
     
     struct Freq_Node;
     using Freq_Iter = typename std::list<Freq_Node>::iterator;
@@ -38,9 +38,9 @@ template <typename Page_T, typename Key_T = int> class LFU
     
 public:
 
-    LFU (std::size_t capacity) : capacity_{capacity} {}
+    LFU (size_t capacity) : capacity_{capacity} {}
 
-    std::size_t size () const { return size_; }
+    size_t size () const { return size_; }
 
     bool is_full () const { return (size_ == capacity_); }
 
