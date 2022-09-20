@@ -135,7 +135,7 @@ private:
         auto node_iter         = page_list_.begin ();
         auto latest_iter       = node_iter;
 
-        for (; node_iter != page_list_.end (); node_iter++)
+        for (auto end_iter = page_list_.end (); node_iter != end_iter; ++node_iter)
         {
             auto next_occurence = occurrence_table_.first (node_iter->key_);
 

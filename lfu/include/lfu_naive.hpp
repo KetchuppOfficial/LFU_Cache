@@ -60,7 +60,7 @@ private:
 
     Cache_Iter find_by_key (const Key_T key)
     {
-        for (auto iter = cache_.begin (); iter != cache_.end (); iter++)
+        for (auto iter = cache_.begin (), end_iter = cache_.end (); iter != end_iter; ++iter)
         {
             if (iter->key_ == key)
                 return iter;
@@ -75,7 +75,7 @@ private:
         auto min_freq_iter = iter;
         auto min_freq      = iter->counter_;
 
-        for (; iter != cache_.end (); iter++)
+        for (auto end_iter = cache_.end (); iter != end_iter; ++iter)
         {
             if (iter->counter_ < min_freq)
             {

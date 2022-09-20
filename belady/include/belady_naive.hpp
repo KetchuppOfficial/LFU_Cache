@@ -83,7 +83,7 @@ private:
 
     auto find_by_key (const Key_T key) const
     {
-        for (auto iter = cache_.begin (); iter != cache_.end (); iter++)
+        for (auto iter = cache_.begin (), end_iter = cache_.end (); iter != end_iter ; ++iter)
         {
             if (iter->key_ == key)
                 return iter;
@@ -94,7 +94,7 @@ private:
 
     int find_next_occurence (const Key_T key) const
     {      
-        for (auto iter = input_iter_; iter != end_; iter++)
+        for (auto iter = input_iter_; iter != end_; ++iter)
         {
             if (*iter == key)
                 return 1 + static_cast<int>(std::distance (input_iter_, iter));
@@ -115,7 +115,7 @@ private:
         auto node_iter         = cache_.begin ();
         auto latest_iter       = node_iter;
         
-        for (; node_iter != cache_.end (); node_iter++)
+        for (auto end_iter = cache_.end (); node_iter != end_iter; ++node_iter)
         {
             auto next_occurence = find_next_occurence (node_iter->key_);
 
