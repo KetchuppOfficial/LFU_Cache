@@ -16,13 +16,8 @@ class Ideal_Cache_Naive
 {
     size_t capacity_;
 
-    struct Node
-    {
-        Page_T page_;
-        Key_T key_;
-    };
-
-    using Cache_Iter = typename std::vector<Node>::iterator;
+    using Node             = typename std::pair<Page_T, Key_T>;
+    using Cache_Iter       = typename std::vector<Node>::iterator;
     using Const_Cache_Iter = typename std::vector<Node>::const_iterator;
 
     std::vector<Node> cache_;
@@ -52,15 +47,15 @@ public:
             {
                 if (is_full ())
                 {
-                    auto latest = find_key_with_latest_occurrence ();
+                    const auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
 
-                    if (latest.next_occurrence != no_next &&
-                        latest.next_occurrence < input_next_occurrence)
+                    if (next_occurrence != no_next &&
+                        next_occurrence < input_next_occurrence)
                     {
                         return false;
                     }
                     else
-                        cache_.erase (latest.iter);
+                        cache_.erase (iter);
                 }
 
                 cache_.push_back ({slow_get_page (key), key});
@@ -78,7 +73,7 @@ private:
     {
         for (auto iter = cache_.begin (), end_iter = cache_.end (); iter != end_iter ; ++iter)
         {
-            if (iter->key_ == key)
+            if (iter->second == key)
                 return iter;
         }
 
@@ -96,13 +91,7 @@ private:
         return no_next;
     }
 
-    struct Latest
-    {
-        Const_Cache_Iter iter;
-        int next_occurrence;
-    };
-
-    Latest find_key_with_latest_occurrence () const
+    std::pair <Const_Cache_Iter, int> find_key_with_latest_occurrence () const
     {
         auto latest_occurrence = 0;
         auto node_iter         = cache_.begin ();
@@ -110,7 +99,7 @@ private:
         
         for (auto end_iter = cache_.end (); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurence = find_next_occurence (node_iter->key_);
+            auto next_occurence = find_next_occurence (node_iter->second);
 
             if (next_occurence == no_next)
                 return {node_iter, next_occurence};

@@ -48,13 +48,8 @@ class Ideal_Cache
 {
     size_t capacity_;
 
-    struct Page_Node
-    {
-        Page_T page_;
-        Key_T key_;
-    };
-
-    using Page_Iter = typename std::list<Page_Node>::iterator;
+    using Page_Node       = typename std::pair<Page_T, Key_T>;
+    using Page_Iter       = typename std::list<Page_Node>::iterator;
     using Const_Page_Iter = typename std::list<Page_Node>::const_iterator;
 
     std::list<Page_Node> page_list_;
@@ -87,21 +82,21 @@ public:
             {
                 if (is_full ())
                 {               
-                    const auto latest = find_key_with_latest_occurrence ();
+                    const auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
 
-                    if (latest.next_occurrence != no_next &&
-                        latest.next_occurrence < input_next_occurrence)
+                    if (next_occurrence != no_next &&
+                        next_occurrence < input_next_occurrence)
                     {
                         occurrence_table_.pop_first (key);
                         return false;
                     }
                     else
                     {
-                        auto key_to_erase = latest.iter->key_;
+                        auto key_to_erase = iter->second;
 
                         hash_table_.erase (key_to_erase);
                         occurrence_table_.pop_first (key_to_erase);
-                        page_list_.erase (latest.iter);
+                        page_list_.erase (iter);
                     }
                 }
 
@@ -120,13 +115,7 @@ public:
 
 private:
 
-    struct Latest
-    {
-        Const_Page_Iter iter;
-        int next_occurrence;
-    };
-
-    Latest find_key_with_latest_occurrence () const
+    std::pair<Const_Page_Iter, int> find_key_with_latest_occurrence () const
     {
         auto latest_occurrence = 0;
         auto node_iter         = page_list_.begin ();
@@ -134,7 +123,7 @@ private:
 
         for (auto end_iter = page_list_.end (); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurence = occurrence_table_.first (node_iter->key_);
+            auto next_occurence = occurrence_table_.first (node_iter->second);
 
             if (next_occurence == no_next)
                 return {node_iter, next_occurence}; 
