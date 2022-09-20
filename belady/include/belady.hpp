@@ -11,10 +11,7 @@
 namespace Caches
 {
 
-enum Next
-{
-    no_next = -1
-};
+constexpr int no_next = -1;
 
 template <typename Key_T> class Occurrence_Table
 {
@@ -40,7 +37,7 @@ public:
     int first (const Key_T key) const
     {
         auto &deque = table_.find (key)->second;
-        return (deque.empty ()) ? static_cast<int>(no_next) : deque.front ();
+        return (deque.empty ()) ? no_next : deque.front ();
     }
 };
 
@@ -86,13 +83,13 @@ public:
         {
             auto input_next_occurrence = occurrence_table_.first (key);
 
-            if (input_next_occurrence != static_cast<int>(no_next))
+            if (input_next_occurrence != no_next)
             {
                 if (is_full ())
                 {               
                     const auto latest = find_key_with_latest_occurrence ();
 
-                    if (latest.next_occurrence != static_cast<int>(no_next) &&
+                    if (latest.next_occurrence != no_next &&
                         latest.next_occurrence < input_next_occurrence)
                     {
                         occurrence_table_.pop_first (key);
@@ -139,7 +136,7 @@ private:
         {
             auto next_occurence = occurrence_table_.first (node_iter->key_);
 
-            if (next_occurence == static_cast<int>(no_next))
+            if (next_occurence == no_next)
                 return {node_iter, next_occurence}; 
             else if (next_occurence > latest_occurrence)
             {

@@ -7,10 +7,7 @@
 namespace Caches
 {
 
-enum Next
-{
-    no_next = -1
-};
+constexpr int no_next = -1;
 
 using Vector_Iter = typename std::vector<int>::iterator;
 
@@ -51,13 +48,13 @@ public:
         {           
             const auto input_next_occurrence = find_next_occurence (key);
 
-            if (input_next_occurrence != static_cast<int>(no_next))
+            if (input_next_occurrence != no_next)
             {
                 if (is_full ())
                 {
                     auto latest = find_key_with_latest_occurrence ();
 
-                    if (latest.next_occurrence != static_cast<int>(no_next) &&
+                    if (latest.next_occurrence != no_next &&
                         latest.next_occurrence < input_next_occurrence)
                     {
                         return false;
@@ -96,7 +93,7 @@ private:
                 return 1 + static_cast<int>(std::distance (input_iter_, iter));
         }
 
-        return static_cast<int>(no_next);
+        return no_next;
     }
 
     struct Latest
@@ -115,7 +112,7 @@ private:
         {
             auto next_occurence = find_next_occurence (node_iter->key_);
 
-            if (next_occurence == static_cast<int>(no_next))
+            if (next_occurence == no_next)
                 return {node_iter, next_occurence};
             else if (next_occurence > latest_occurrence)
             {
