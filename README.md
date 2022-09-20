@@ -26,20 +26,25 @@ The following applications have to be installed:
 
 ### 1) Go to the desired directory
 
-1. LFU cache
+1. **LFU cache**
+
     1. Fast implementation
     ```bash
     cd lfu/fast
     ```
+
     2. Naive implementation
     ```bash
     cd lfu/naive
     ```
-2. Belady's cache
+
+2. **Belady's cache**
+
     1. Fast implementation
     ```bash
     cd belady/fast
     ```
+
     2. Naive implementation
     ```bash
     cd belady/naive
@@ -55,20 +60,25 @@ cmake --build .
 
 ### 3) Run the program
 
-1. LFU cache
+1. **LFU cache**
+
     1. Fast implementation
     ```bash
     ./lfu < file_with_tests.txt
     ```
+
     2. Naive implementation
     ```bash
     ./lfu_naive < file_with_tests.txt
     ```
-2. Belady's cache
+    
+2. **Belady's cache**
+
     1. Fast implementation
     ```bash
     ./belady < file_with_tests.txt
     ```
+
     2. Naive implementation
     ```bash
     ./belady_naive < file_with_tests.txt
