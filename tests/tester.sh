@@ -4,17 +4,7 @@ green="\033[1;32m"
 red="\033[1;31m"
 default="\033[0m"
 
-common_test_dir="../../../tests/"
 test_dir="tests/"
-ans_dir="answers"
-res_dir="results"
-
-function Build
-{
-    cmake -B build
-    cd build
-    cmake --build .
-}
 
 function Mkdir
 {
@@ -22,45 +12,34 @@ function Mkdir
     mkdir $1
 }
 
-function Test ()
+function Run_Tests
 {
-    local fast=$1
-    local naive="${1}_naive"
-    
-    echo "Building naive version..."
-    cd naive
-    Build
-    echo -en "\n"
+    local fast="../build/${cache}/fast/${cache}"
+    local naive="../build/${cache}/naive/${cache}_naive"
+
+    local ans_dir="answers_${cache}/"
+    local res_dir="results_${cache}/"
 
     echo "Generating answers..."
     for ((i = 0; i < $n_tests; i++))
     do
-        ./$naive < ${common_test_dir}${test_dir}test_${i}.txt > ${common_test_dir}${ans_dir}_$1/answer_${i}.txt
+        $naive < ${test_dir}test_${i}.txt > ${ans_dir}/answer_${i}.txt
     done
-    echo -en "\n"
-    
-    cd ../..
-
-    echo "Building fast version..."
-    cd fast
-    Build
     echo -en "\n"
 
     echo "Testing..."
     for ((i = 0; i < $n_tests; i++))
     do
-        ./$fast < ${common_test_dir}${test_dir}test_${i}.txt > ${common_test_dir}${res_dir}_$1/result_${i}.txt
+        $fast < ${test_dir}test_${i}.txt > ${res_dir}/result_${i}.txt
 
         echo -n "Test $((i + 1)): "
-        if diff -Z ${common_test_dir}${ans_dir}_$1/answer_${i}.txt ${common_test_dir}${res_dir}_$1/result_${i}.txt > /dev/null
+        if diff -Z ${ans_dir}/answer_${i}.txt ${res_dir}/result_${i}.txt > /dev/null
         then
             echo -e "${green}passed${default}"
         else
             echo -e "${red}failed${default}"
         fi
     done
-
-    cd ../../../tests
 }
 
 if [ $# -ne 2 ]
@@ -71,22 +50,25 @@ else
     then
         echo "The number of tests has to be at least 1"
     else
-        mode=$1
+        cache=$1
 
-        if [ $mode = "lfu" ] || [ $mode = "belady" ]; then
-
-            Mkdir ${test_dir}
+        if [ $cache = "lfu" ] || [ $cache = "belady" ]
+        then
+            Mkdir $test_dir
 
             echo "Generating tests..."
             n_tests=$2
             python3 test_generator.py $n_tests $test_dir
             echo -en "\n"
             
-            Mkdir "${ans_dir}_${mode}"
-            Mkdir "${res_dir}_${mode}"
+            Mkdir "answers_${cache}"
+            Mkdir "results_${cache}"
             
-            cd "../$mode"
-            Test $mode
+            echo "Building ${cache} cache..."
+            cmake .. -B ../build -DCACHE_TYPE=$cache
+            echo -en "\n"
+
+            Run_Tests
 
         else
             "There is no testing mode with name $2"

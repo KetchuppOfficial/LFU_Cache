@@ -1,6 +1,5 @@
 #!/bin/bash
 
-common_test_dir="../../../tests/"
 test_dir="tests/"
 
 function Mkdir
@@ -9,25 +8,18 @@ function Mkdir
     mkdir $1
 }
 
-function Build
-{
-    cmake -B build
-    cd build
-    cmake --build .
-}
-
 function Run_Cache ()
 {
     local cache=$1
-    Mkdir $cache
+    local fast="../build/${cache}/fast/${cache}"
+    local data_dir="${cache}_data/"
 
-    cd ../$cache/fast
-    Build
+    Mkdir $data_dir
+
     for ((i = 0; i < $n_tests; i++))
     do
-        ./$cache < ${common_test_dir}${test_dir}test_${i}.txt > ${common_test_dir}${cache}/result_${i}.txt
+        $fast < ${test_dir}test_${i}.txt > ${data_dir}result_${i}.txt
     done
-    cd $common_test_dir
 }
 
 if [ $# -ne 1 ]
@@ -43,6 +35,10 @@ else
         echo "Generating tests..."
         n_tests=$1
         python3 test_generator.py $n_tests $test_dir
+        echo -en "\n"
+
+        echo "Building caches..."
+        cmake .. -B ../build
         echo -en "\n"
 
         echo "Running LFU cache..."

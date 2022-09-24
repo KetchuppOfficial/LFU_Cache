@@ -10,10 +10,10 @@ def build_bar_chart (n_tests: int):
     belady = []
     for test_i in range (n_tests):
 
-        with open(f"lfu/result_{test_i}.txt", "r") as lfu_res:
+        with open(f"lfu_data/result_{test_i}.txt", "r") as lfu_res:
             lfu.append(int(lfu_res.readline ()))
 
-        with open(f"belady/result_{test_i}.txt", "r") as belady_res:
+        with open(f"belady_data/result_{test_i}.txt", "r") as belady_res:
             belady.append(int(belady_res.readline ()))
 
     x = np.arange(len(cat_par))
