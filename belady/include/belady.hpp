@@ -68,7 +68,7 @@ public:
 
     bool is_full () const { return (size () == capacity_); }
 
-    bool lookup_update (Page_T (* slow_get_page) (Key_T))
+    template <typename F> bool lookup_update (F slow_get_page)
     {
         Key_T key {*input_iter_++};
 

@@ -32,7 +32,7 @@ public:
 
     bool is_full () const { return (size() == capacity_); }
 
-    bool lookup_update (const Key_T key, Page_T (* slow_get_page) (Key_T))
+    template <typename F> bool lookup_update (const Key_T key, F slow_get_page)
     {
         auto hit = find_by_key (key);
         

@@ -44,7 +44,7 @@ public:
 
     bool is_full () const { return (size_ == capacity_); }
 
-    bool lookup_update (const Key_T key, Page_T (* slow_get_page) (Key_T))
+    template <typename F> bool lookup_update (const Key_T key, F slow_get_page)
     {
         auto hit = hash_table_.find (key);
 
@@ -62,7 +62,7 @@ public:
 
 private:
 
-    template <typename F> void request_page (const Key_T key, const F &slow_get_page)
+    template <typename F> void request_page (const Key_T key, F slow_get_page)
     {
         auto lfu_freq_node = freq_list_.begin ();
 
