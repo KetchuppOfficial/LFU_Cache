@@ -1,5 +1,5 @@
-#ifndef LFU_HPP
-#define LFU_HPP
+#ifndef LFU_INCLUDE_LFU_HPP
+#define LFU_INCLUDE_LFU_HPP
 
 #include <list>
 #include <unordered_map>
@@ -104,4 +104,4 @@ private:
 
 } // namespace Caches
 
-#endif // LFU_HPP
+#endif // LFU_INCLUDE_LFU_HPP

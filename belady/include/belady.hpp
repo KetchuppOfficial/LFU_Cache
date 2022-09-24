@@ -1,5 +1,5 @@
-#ifndef BELADY_HPP
-#define BELADY_HPP
+#ifndef BELADY_INCLUDE_BELADY_HPP
+#define BELADY_INCLUDE_BELADY_HPP
 
 #include <list>
 #include <unordered_map>
@@ -140,4 +140,4 @@ private:
 
 } // namespace Caches
 
-#endif // BELADY_HPP
+#endif // BELADY_INCLUDE_BELADY_HPP

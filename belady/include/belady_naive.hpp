@@ -1,5 +1,5 @@
-#ifndef BELADY_NAIVE_HPP
-#define BELADY_NAIVE_HPP
+#ifndef BELADY_INCLUDE_BELADY_NAIVE_HPP
+#define BELADY_INCLUDE_BELADY_NAIVE_HPP
 
 #include <vector>
 #include <iterator>
@@ -116,4 +116,4 @@ private:
 
 }
 
-#endif // IDEAL_CACHE_NAIVE_HPP
+#endif // BELADY_INCLUDE_BELADY_NAIVE_HPP

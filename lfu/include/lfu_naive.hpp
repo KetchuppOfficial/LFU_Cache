@@ -1,5 +1,5 @@
-#ifndef LFU_NAIVE_HPP
-#define LFU_NAIVE_HPP
+#ifndef LFU_INCLUDE_LFU_NAIVE_HPP
+#define LFU_INCLUDE_LFU_NAIVE_HPP
 
 #include <vector>
 #include <iterator>
@@ -90,4 +90,4 @@ private:
 
 }
 
-#endif // LFU_NAIVE_HPP
+#endif // LFU_INCLUDE_LFU_NAIVE_HPP
