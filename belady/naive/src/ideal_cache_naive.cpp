@@ -2,13 +2,6 @@
 #include <cassert>
 #include "belady_naive.hpp"
 
-namespace Caches
-{
-
-int slow_get_page (int key) { return key; }
-
-}
-
 int main ()
 {
     std::size_t cache_size {};
@@ -33,7 +26,7 @@ int main ()
 
     int n_hits {};
     for (auto key_i = 0; key_i < n_keys; key_i++)
-        n_hits += cache.lookup_update(Caches::slow_get_page);
+        n_hits += cache.lookup_update([](const int key){ return key; });
     
     std::cout << n_hits << std::endl;
 

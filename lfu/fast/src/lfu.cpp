@@ -2,13 +2,6 @@
 #include <cassert>
 #include "lfu.hpp"
 
-namespace Caches
-{
-
-int slow_get_page (int key) { return key; }
-
-}
-
 int main ()
 {
     std::size_t cache_size {};
@@ -28,7 +21,7 @@ int main ()
         std::cin >> key;
         assert (std::cin.good ());
 
-        n_hits += cache.lookup_update(key, Caches::slow_get_page);
+        n_hits += cache.lookup_update(key, [](const int key){ return key; });
     }
 
     std::cout << n_hits << std::endl;
