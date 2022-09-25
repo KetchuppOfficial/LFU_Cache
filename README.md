@@ -24,51 +24,14 @@ The following applications have to be installed:
 
 ### 0) Make sure you are in the root directory of the project (i.e. LFU_Cache/)
 
-### 1) Generate building system
+### 1) Build desired cache(s)
 
-1. **All 4 caches**
 ```bash
 cmake -B build
+cd build
+cmake --build . [--target targetName]
 ```
-
-2. **LFU cache**
-
-    1. Fast implementation
-    ```bash
-    cmake -B build -D ALGORITHM=lfu -D IMPLEMENTATION=fast
-    ```
-
-    2. Naive implementation
-    ```bash
-    cmake -B build -D ALGORITHM=lfu -D IMPLEMENTATION=naive
-    ```
-
-    3. Both implementations
-    ```bash
-    cmake -B build -D ALGORITHM=lfu
-    ```
-
-2. **Belady's cache**
-
-    1. Fast implementation
-    ```bash
-    cmake -B build -D ALGORITHM=belady -D IMPLEMENTATION=fast
-    ```
-
-    2. Naive implementation
-    ```bash
-    cmake -B build -D ALGORITHM=belady -D IMPLEMENTATION=naive
-    ```
-
-    3. Both implementations
-    ```bash
-    cmake -B build -D ALGORITHM=belady
-    ```
-
-### 2) Build desired cache(s)
-```bash
-cmake --build build
-```
+**targetName** can be **lfu**, **lfu_naive**, **belady** or **belady_naive**.
 
 ### 3) Run the program
 

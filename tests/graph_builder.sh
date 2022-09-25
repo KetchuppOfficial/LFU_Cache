@@ -39,6 +39,8 @@ else
 
         echo "Building caches..."
         cmake .. -B ../build
+        cmake --build ../build --target lfu
+        cmake --build ../build --target belady
         echo -en "\n"
 
         echo "Running LFU cache..."

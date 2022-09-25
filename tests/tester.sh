@@ -61,11 +61,13 @@ else
             python3 test_generator.py $n_tests $test_dir
             echo -en "\n"
             
-            Mkdir "answers_${cache}"
-            Mkdir "results_${cache}"
-            
+            Mkdir answers_${cache}
+            Mkdir results_${cache}
+                        
             echo "Building ${cache} cache..."
-            cmake .. -B ../build -DCACHE_TYPE=$cache
+            cmake .. -B ../build
+            cmake --build ../build --target ${cache}
+            cmake --build ../build --target ${cache}_naive
             echo -en "\n"
 
             Run_Tests
