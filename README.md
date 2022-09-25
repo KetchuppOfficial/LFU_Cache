@@ -24,65 +24,55 @@ The following applications have to be installed:
 
 ### 0) Make sure you are in the root directory of the project (i.e. LFU_Cache/)
 
-### 1) Go to the desired directory
+### 1) Generate building system
 
-1. **LFU cache**
+1. **All 4 caches**
+```bash
+cmake -B build
+```
+
+2. **LFU cache**
 
     1. Fast implementation
     ```bash
-    cd lfu/fast
+    cmake -B build -D ALGORITHM=lfu -D IMPLEMENTATION=fast
     ```
 
     2. Naive implementation
     ```bash
-    cd lfu/naive
+    cmake -B build -D ALGORITHM=lfu -D IMPLEMENTATION=naive
+    ```
+
+    3. Both implementations
+    ```bash
+    cmake -B build -D ALGORITHM=lfu
     ```
 
 2. **Belady's cache**
 
     1. Fast implementation
     ```bash
-    cd belady/fast
+    cmake -B build -D ALGORITHM=belady -D IMPLEMENTATION=fast
     ```
 
     2. Naive implementation
     ```bash
-    cd belady/naive
+    cmake -B build -D ALGORITHM=belady -D IMPLEMENTATION=naive
     ```
 
-### 2) Build cache
+    3. Both implementations
+    ```bash
+    cmake -B build -D ALGORITHM=belady
+    ```
 
+### 2) Build desired cache(s)
 ```bash
-cmake -B build
-cd build
-cmake --build .
+cmake --build build
 ```
 
 ### 3) Run the program
 
-1. **LFU cache**
-
-    1. Fast implementation
-    ```bash
-    ./lfu < file_with_tests.txt
-    ```
-
-    2. Naive implementation
-    ```bash
-    ./lfu_naive < file_with_tests.txt
-    ```
-    
-2. **Belady's cache**
-
-    1. Fast implementation
-    ```bash
-    ./belady < file_with_tests.txt
-    ```
-
-    2. Naive implementation
-    ```bash
-    ./belady_naive < file_with_tests.txt
-    ```
+This section is not finished yet.
 
 ## How to generate tests
 
