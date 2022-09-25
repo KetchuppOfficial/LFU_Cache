@@ -28,14 +28,20 @@ The following applications have to be installed:
 
 ```bash
 cmake -B build
-cd build
-cmake --build . [--target targetName]
+cmake --build build [--target <tgt>]
 ```
-**targetName** can be **lfu**, **lfu_naive**, **belady** or **belady_naive**.
+**<tgt>** can be **lfu**, **lfu_naive**, **belady** or **belady_naive**.
+If --target option is omitted, all 4 caches will be built.
 
-### 3) Run the program
+### 3) Install cache(s)
+```bash
+cmake --install build [--prefix <prefix>] [--component <comp>]
+```
+**<prefix>** can be any directory you want to install the cache(s) in.
+If --prefix option is omitted, executable files will be installed in ./bin/ directory.
 
-This section is not finished yet.
+**<comp>** can be **lfu**, **lfu_naive**, **belady** or **belady_naive**.
+If --component option is omitted, all 4 caches will be installed.
 
 ## How to generate tests
 
