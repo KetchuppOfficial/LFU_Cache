@@ -34,6 +34,9 @@ cmake --build build [--target <tgt>]
 If --target option is omitted, all 4 caches will be built.
 
 ### 3) Install cache(s)
+
+You can install driver programs in any directory you want to run your own tests on my caches.
+
 ```bash
 cmake --install build [--prefix <prefix>] [--component <comp>]
 ```
