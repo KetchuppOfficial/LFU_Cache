@@ -16,7 +16,7 @@ cd LFU_Cache
 
 The following applications have to be installed:
 
-1) CMake of version 3.16 (or higher)
+1) CMake of version 3.22 (or higher)
 
 2) clang++
 
