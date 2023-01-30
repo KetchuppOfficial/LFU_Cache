@@ -1,6 +1,6 @@
 # HWC - caches
 
-This project is the first task on course "Uses and applications of the C++ language" by [K.I.Vladimirov](https://github.com/tilir). The task was to implement one of suggested cache replacement algorithms. I chose LFU cache.
+This project is the first task on course "Uses and applications of C++ language" by [K.I.Vladimirov](https://github.com/tilir). The task was to implement one of suggested cache replacement algorithms. I chose LFU cache.
 
 ## Project structure
 
@@ -17,8 +17,6 @@ cd LFU_Cache
 The following applications have to be installed:
 
 1) CMake of version 3.22 (or higher)
-
-2) clang++
 
 ## How to build
 
