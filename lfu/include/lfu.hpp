@@ -5,25 +5,28 @@
 #include <unordered_map>
 #include <iterator>
 
-namespace Caches
+namespace yLab
 {
 
-template <typename Page_T, typename Key_T = int> class LFU
+template<typename Page_T, typename Key_T = int>
+class LFU final
 {   
-    size_t capacity_;
-    size_t size_ = 0;
+    using size_type = std::size_t;
+    using key_type = Key_T;
+    
+    size_type capacity_;
+    size_type size_ = 0;
     
     struct Freq_Node;
-    using Freq_Iter = typename std::list<Freq_Node>::iterator;
 
     struct Page_Node
     {
         Page_T page;
-        Key_T key;
-        Freq_Iter parent;
+        key_type key;
+        std::list<Freq_Node>::iterator parent;
     };
 
-    using Page_Iter = typename std::list<Page_Node>::iterator;
+    using page_iterator = typename std::list<Page_Node>::iterator;
 
     struct Freq_Node
     {
@@ -32,23 +35,24 @@ template <typename Page_T, typename Key_T = int> class LFU
     };
 
     std::list<Freq_Node> freq_list_;
-    std::unordered_map<Key_T, Page_Iter> hash_table_;
+    std::unordered_map<key_type, page_iterator> hash_table_;
 
-    using Hash_Iter = typename std::unordered_map<Key_T, Page_Iter>::iterator;
+    using hash_iterator = typename std::unordered_map<key_type, page_iterator>::iterator;
     
 public:
 
-    LFU (size_t capacity) : capacity_{capacity} {}
+    explicit LFU (size_type capacity) : capacity_{capacity} {}
 
-    size_t size () const { return size_; }
+    size_type size () const { return size_; }
 
     bool is_full () const { return (size_ == capacity_); }
 
-    template <typename F> bool lookup_update (const Key_T key, F slow_get_page)
+    template<typename F>
+    bool lookup_update (const key_type &key, F slow_get_page)
     {
         auto hit = hash_table_.find (key);
 
-        if (hit == hash_table_.end ())
+        if (hit == hash_table_.end())
         {
             request_page (key, slow_get_page);
             return false;
@@ -62,46 +66,47 @@ public:
 
 private:
 
-    template <typename F> void request_page (const Key_T key, F slow_get_page)
+    template<typename F>
+    void request_page (const key_type &key, F slow_get_page)
     {
-        auto lfu_freq_node = freq_list_.begin ();
+        auto lfu_freq_node = freq_list_.begin();
 
-        if (is_full ())
+        if (is_full())
         {
-            auto lfu_node = lfu_freq_node->node_list.begin ();
+            auto lfu_node = lfu_freq_node->node_list.begin();
             hash_table_.erase (lfu_node->key);
             lfu_freq_node->node_list.erase (lfu_node);
             size_--;
         }
 
         if (lfu_freq_node->counter != 1)
-            lfu_freq_node = freq_list_.insert (lfu_freq_node, {1});
+            lfu_freq_node = freq_list_.emplace (lfu_freq_node, 1);
 
         auto &lfu_list = lfu_freq_node->node_list;
 
-        lfu_list.push_back ({slow_get_page (key), key, lfu_freq_node});
-        hash_table_[key] = std::prev (lfu_list.end ());
+        lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node);
+        hash_table_[key] = std::prev (lfu_list.end());
         size_++;
     }
 
-    void access_cached (const Hash_Iter hit)
+    void access_cached (const hash_iterator hit)
     {
-        auto page      = hit->second;
-        auto freq      = page->parent;
+        auto page_it = hit->second;
+        auto freq = page_it->parent;
         auto next_freq = std::next (freq);
 
-        if (next_freq == freq_list_.end () || next_freq->counter != freq->counter + 1)
-            next_freq = freq_list_.insert (next_freq, {freq->counter + 1});
+        if (next_freq == freq_list_.end() || next_freq->counter != freq->counter + 1)
+            next_freq = freq_list_.emplace (next_freq, freq->counter + 1);
 
         auto &next_list = next_freq->node_list;
-        next_list.splice (next_list.end (), freq->node_list, page);
-        page->parent = next_freq;
+        next_list.splice (next_list.end(), freq->node_list, page_it);
+        page_it->parent = next_freq;
 
-        if (freq->node_list.size () == 0)
+        if (freq->node_list.size() == 0)
             freq_list_.erase (freq);
     }
 };
 
-} // namespace Caches
+} // namespace yLab
 
 #endif // LFU_INCLUDE_LFU_HPP

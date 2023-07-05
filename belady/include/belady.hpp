@@ -8,81 +8,87 @@
 #include <vector>
 #include <algorithm>
 
-namespace Caches
+namespace yLab
 {
 
 constexpr int no_next = -1;
 
-template <typename Key_T> class Occurrence_Table
+template<typename Key_T>
+class Occurrence_Table final
 {
     std::unordered_map<Key_T, std::deque<int>> table_;
     
 public:
-    template <typename Keys_Iter> Occurrence_Table (Keys_Iter begin, Keys_Iter end) : table_{}
+
+    template<typename key_iterator>
+    Occurrence_Table (key_iterator begin, key_iterator end) : table_{}
     {
-        std::for_each (begin, end, [this, index = 0](const Key_T &key) mutable { add (key, index); index++; });
+        std::for_each (begin, end, [this, index = 0](const Key_T &key) mutable
+                                   { add (key, index); index++; });
 
         for (auto &bucket : table_)
         {
             auto &deque = bucket.second;
-            if (!deque.empty ())
-                deque.pop_front ();
+            if (!deque.empty())
+                deque.pop_front();
         }
     }
 
-    void add (const Key_T key, const int occurrence) { table_[key].push_back (occurrence); }
+    void add (const Key_T &key, int occurrence) { table_[key].push_back (occurrence); }
 
-    void pop_first (const Key_T key) { table_.find (key)->second.pop_front (); }
+    void pop_first (const Key_T &key) { table_.find (key)->second.pop_front(); }
 
-    int first (const Key_T key) const
+    int first (const Key_T &key) const
     {
         auto &deque = table_.find (key)->second;
-        return (deque.empty ()) ? no_next : deque.front ();
+        return (deque.empty()) ? no_next : deque.front();
     }
 };
 
-using Vector_Iter = typename std::vector<int>::iterator;
-
-template <typename Page_T, typename Key_T = int, typename Keys_Iter = Vector_Iter> 
-class Ideal_Cache
+template<typename Key_Iter, typename Page_T = int>
+class Ideal_Cache final
 {
-    size_t capacity_;
+    using size_type = std::size_t;
+    using key_iterator = Key_Iter;
+    using key_type = typename std::iterator_traits<key_iterator>::value_type;
+    using page_node = typename std::pair<Page_T, key_type>;
+    using page_iterator = typename std::list<page_node>::iterator;
+    using const_page_iterator = typename std::list<page_node>::const_iterator;
 
-    using Page_Node       = typename std::pair<Page_T, Key_T>;
-    using Page_Iter       = typename std::list<Page_Node>::iterator;
-    using Const_Page_Iter = typename std::list<Page_Node>::const_iterator;
+    size_type capacity_;
 
-    std::list<Page_Node> page_list_;
-    std::unordered_map<Key_T, Page_Iter> hash_table_;
+    std::list<page_node> page_list_;
+    std::unordered_map<key_type, page_iterator> hash_table_;
 
-    Occurrence_Table<Key_T> occurrence_table_;
+    Occurrence_Table<key_type> occurrence_table_;
 
-    Keys_Iter input_iter_;
+    key_iterator input_iter_;
 
 public:
 
-    Ideal_Cache (size_t capacity, Keys_Iter begin, Keys_Iter end)
+    Ideal_Cache (size_type capacity, key_iterator begin, key_iterator end)
                 : capacity_{capacity}, occurrence_table_{begin, end}, input_iter_{begin} {}
 
-    size_t size () const { return page_list_.size (); }
+    size_type size () const { return page_list_.size(); }
 
-    bool is_full () const { return (size () == capacity_); }
+    bool is_full () const { return (size() == capacity_); }
 
-    template <typename F> bool lookup_update (F slow_get_page)
+    template<typename F>
+    bool lookup_update (F slow_get_page)
     {
-        Key_T key {*input_iter_++};
+        auto key {*input_iter_++};
 
         auto hit = hash_table_.find (key);
 
-        if (hit == hash_table_.end ())
+        if (hit == hash_table_.end())
         {
             auto input_next_occurrence = occurrence_table_.first (key);
 
             if (input_next_occurrence != no_next)
             {
-                if (is_full ())
+                if (is_full())
                 {               
-                    const auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
+                    auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
 
                     if (next_occurrence != no_next &&
                         next_occurrence < input_next_occurrence)
@@ -92,7 +98,7 @@ public:
                     }
                     else
                     {
-                        auto key_to_erase = iter->second;
+                        auto &key_to_erase = iter->second;
 
                         hash_table_.erase (key_to_erase);
                         occurrence_table_.pop_first (key_to_erase);
@@ -100,8 +106,8 @@ public:
                     }
                 }
 
-                page_list_.push_back ({slow_get_page (key), key});
-                hash_table_[key] = std::prev (page_list_.end ());
+                page_list_.emplace_back (slow_get_page (key), key);
+                hash_table_[key] = std::prev (page_list_.end());
             }
 
             return false;
@@ -115,18 +121,18 @@ public:
 
 private:
 
-    std::pair<Const_Page_Iter, int> find_key_with_latest_occurrence () const
+    std::pair<const_page_iterator, int> find_key_with_latest_occurrence () const
     {
         auto latest_occurrence = 0;
-        auto node_iter         = page_list_.begin ();
+        auto node_iter         = page_list_.begin();
         auto latest_iter       = node_iter;
 
-        for (auto end_iter = page_list_.end (); node_iter != end_iter; ++node_iter)
+        for (auto end_iter = page_list_.end(); node_iter != end_iter; ++node_iter)
         {
             auto next_occurence = occurrence_table_.first (node_iter->second);
 
             if (next_occurence == no_next)
-                return {node_iter, next_occurence}; 
+                return std::pair{node_iter, next_occurence}; 
             else if (next_occurence > latest_occurrence)
             {
                 latest_iter       = node_iter;
@@ -134,10 +140,10 @@ private:
             }
         }
 
-        return {latest_iter, latest_occurrence};
+        return std::pair{latest_iter, latest_occurrence};
     }
 };
 
-} // namespace Caches
+} // namespace yLab
 
 #endif // BELADY_INCLUDE_BELADY_HPP

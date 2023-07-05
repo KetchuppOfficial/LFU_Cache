@@ -5,89 +5,75 @@
 #include <iterator>
 #include <algorithm>
 
-namespace Caches
+namespace yLab
 {
 
-template <typename Page_T, typename Key_T = int> class LFU_Naive
+template<typename Page_T, typename Key_T = int>
+class LFU_Naive final
 {
-    size_t capacity_;
+    using size_type = std::size_t;
+    using key_type = Key_T;
+    
+    size_type capacity_;
 
     struct Node
     {
         Page_T page_;
-        Key_T key_;
+        key_type key_;
         int counter_;
     };
 
     std::vector<Node> cache_;
 
-    using Cache_Iter = typename std::vector<Node>::iterator;
-    using Const_Cache_Iter = typename std::vector<Node>::const_iterator;
-
 public:
 
-    LFU_Naive (size_t capacity) : capacity_{capacity} {}
+    explicit LFU_Naive (size_type capacity) : capacity_{capacity} {}
 
-    size_t size () const { return cache_.size(); }
+    size_type size () const { return cache_.size(); }
 
     bool is_full () const { return (size() == capacity_); }
 
-    template <typename F> bool lookup_update (const Key_T key, F slow_get_page)
+    template<typename F>
+    bool lookup_update (const key_type &key, F slow_get_page)
     {
         auto hit = find_by_key (key);
         
-        if (hit == cache_.end ())
+        if (hit == cache_.end())
         {
-            if (is_full ())
-            {
-                auto min_freq_iter = find_min_freq ();
-                cache_.erase (min_freq_iter);
-            }
+            if (is_full())
+                cache_.erase (find_min_freq());
 
-            cache_.push_back ({slow_get_page (key), key, 1});
+            cache_.emplace_back (slow_get_page (key), key, 1);
 
             return false;
         } 
         else
         {
             hit->counter_++;
-            std::rotate (hit, hit + 1, cache_.end ());
+            std::rotate (hit, std::next (hit), cache_.end());
+
             return true;
         }
     }
 
 private:
 
-    Cache_Iter find_by_key (const Key_T key)
-    {
-        for (auto iter = cache_.begin (), end_iter = cache_.end (); iter != end_iter; ++iter)
-        {
-            if (iter->key_ == key)
-                return iter;
-        }
+    using iterator = typename std::vector<Node>::iterator;
+    using const_iterator = typename std::vector<Node>::iterator;
 
-        return cache_.end (); 
+    iterator find_by_key (const key_type &key)
+    {
+        return std::find_if (cache_.begin(), cache_.end(),
+                             [&key](auto &&node){ return node.key_ == key; });
     }
 
-    Const_Cache_Iter find_min_freq () const
+    iterator find_min_freq ()
     {
-        auto iter          = cache_.begin ();
-        auto min_freq_iter = iter;
-        auto min_freq      = iter->counter_;
-
-        for (auto end_iter = cache_.end (); iter != end_iter; ++iter)
-        {
-            if (iter->counter_ < min_freq)
-            {
-                min_freq_iter = iter;
-                min_freq      = iter->counter_;
-            }
-        }
-        
-        return min_freq_iter;
+        return std::min_element (cache_.begin(), cache_.end(),
+                                 [](auto &&x, auto &&y){ return x.counter_ < y.counter_; });
     }
 };
 
-}
+} // namespace yLab
 
 #endif // LFU_INCLUDE_LFU_NAIVE_HPP
