@@ -7,6 +7,7 @@ This project is the first task on course "Uses and applications of C++ language"
 4 cache algorithms were implemented: [naive](./lfu/include/lfu_naive.hpp) and [O(1)](./lfu/include/lfu.hpp) LFU, [naive](./belady/include/belady_naive.hpp) and [O(n)](./belady/include/belady.hpp) Belady's algorithm.
 
 ## How to install
+
 ```bash
 git clone git@github.com:KetchuppOfficial/LFU_Cache.git
 cd LFU_Cache
@@ -28,6 +29,7 @@ The following applications have to be installed:
 cmake -B build
 cmake --build build [--target <tgt>]
 ```
+
 **tgt** can be **lfu**, **lfu_naive**, **belady** or **belady_naive**.
 If --target option is omitted, all 4 caches will be built.
 
@@ -38,6 +40,7 @@ You can install driver programs in any directory you want to run your own tests 
 ```bash
 cmake --install build [--prefix <prefix>] [--component <comp>]
 ```
+
 **prefix** can be any directory you want to install the cache(s) in.
 If --prefix option is omitted, executable files will be installed in ./bin/ directory.
 
@@ -49,9 +52,11 @@ If --component option is omitted, all 4 caches will be installed.
 If you want to run some tests, go to [./tests](./tests/) directory.
 
 Let **N** be the number of tests you want to run, then command sequence:
+
 ```bash
 ./tester.sh mode N
 ```
+
 generates **N** tests, builds naive cache and runs it on the tests to compute answers. After that fast cache is run on those tests to compute its own answers. Finally, both sets of answers are compared. If answers on the same test differ between naive and fast implementations, then this test is considered "failed". It is considered "passed" otherwise. **mode** argument has to be of one of 2 values only: **lfu** or **belady**. It specifies what algorithm will be tested.
 
 ## Comparison of algorithms
@@ -59,9 +64,11 @@ generates **N** tests, builds naive cache and runs it on the tests to compute an
 If you want to build a bar chart that compares output results of two algorithms, go to [./tests](./tests/) directory.
 
 Let **N** be the number of tests, results on which you want to represented in a bar chart, then command sequence:
+
 ```bash
 ./graph_builder.sh N
 ```
+
 generates **N** tests, builds fast caches and runs them of those tests. After that a python script builds a bar chart based on the results of each cache.
 
 Here is an example of a bar chart:
