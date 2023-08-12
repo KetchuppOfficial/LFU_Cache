@@ -18,7 +18,7 @@ template<typename Key_T>
 class Occurrence_Table final
 {
     std::unordered_map<Key_T, std::deque<int>> table_;
-    
+
 public:
 
     template<typename key_iterator>
@@ -88,7 +88,7 @@ public:
             if (input_next_occurrence != no_next)
             {
                 if (is_full())
-                {               
+                {
                     auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
 
                     if (next_occurrence != no_next &&
@@ -117,7 +117,7 @@ public:
         {
             occurrence_table_.pop_first (key);
             return true;
-        }       
+        }
     }
 
 private:
@@ -133,7 +133,7 @@ private:
             auto next_occurence = occurrence_table_.first (node_iter->second);
 
             if (next_occurence == no_next)
-                return std::pair{node_iter, next_occurence}; 
+                return std::pair{node_iter, next_occurence};
             else if (next_occurence > latest_occurrence)
             {
                 latest_iter       = node_iter;

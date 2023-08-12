@@ -17,7 +17,7 @@ class Ideal_Cache_Naive final
     using key_type = typename std::iterator_traits<key_iterator>::value_type;
     using node_type = typename std::pair<Page_T, key_type>;
     using const_iterator = typename std::vector<node_type>::const_iterator;
-    
+
     size_type capacity_;
     std::vector<node_type> cache_;
     key_iterator input_iter_;
@@ -42,7 +42,7 @@ public:
         if (contains (key))
             return true;
         else
-        {           
+        {
             auto input_next_occurrence = find_next_occurence (key);
 
             if (input_next_occurrence != no_next)
@@ -59,7 +59,7 @@ public:
 
                 cache_.emplace_back (slow_get_page (key), key);
             }
-            
+
             return false;
         }
     }
@@ -75,7 +75,7 @@ private:
     }
 
     int find_next_occurence (const key_type &key) const
-    {      
+    {
         auto it = std::find_if (input_iter_, end_, [&key](auto &&elem){ return elem == key; });
         if (it == end_)
             return no_next;
@@ -88,7 +88,7 @@ private:
         auto latest_occurrence = 0;
         auto node_iter = cache_.begin();
         auto latest_iter = node_iter;
-        
+
         for (auto end_iter = cache_.end(); node_iter != end_iter; ++node_iter)
         {
             auto next_occurence = find_next_occurence (node_iter->second);

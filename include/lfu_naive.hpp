@@ -13,7 +13,7 @@ class LFU_Naive final
 {
     using size_type = std::size_t;
     using key_type = Key_T;
-    
+
     size_type capacity_;
 
     struct Node
@@ -37,7 +37,7 @@ public:
     bool lookup_update (const key_type &key, F slow_get_page)
     {
         auto hit = find_by_key (key);
-        
+
         if (hit == cache_.end())
         {
             if (is_full())
@@ -46,7 +46,7 @@ public:
             cache_.emplace_back (slow_get_page (key), key, 1);
 
             return false;
-        } 
+        }
         else
         {
             hit->counter_++;

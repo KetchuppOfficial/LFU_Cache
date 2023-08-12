@@ -10,13 +10,13 @@ namespace yLab
 
 template<typename Page_T, typename Key_T = int>
 class LFU final
-{   
+{
     using size_type = std::size_t;
     using key_type = Key_T;
-    
+
     size_type capacity_;
     size_type size_ = 0;
-    
+
     struct Freq_Node;
 
     struct Page_Node
@@ -38,7 +38,7 @@ class LFU final
     std::unordered_map<key_type, page_iterator> hash_table_;
 
     using hash_iterator = typename std::unordered_map<key_type, page_iterator>::iterator;
-    
+
 public:
 
     explicit LFU (size_type capacity) : capacity_{capacity} {}

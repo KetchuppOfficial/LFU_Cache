@@ -35,7 +35,7 @@ def build_bar_chart (n_tests: int):
     plt.savefig ("algorithm_comparison.png")
 
 def main ():
-    
+
     n_tests: int = int (sys.argv[1])
     build_bar_chart (n_tests)
 
