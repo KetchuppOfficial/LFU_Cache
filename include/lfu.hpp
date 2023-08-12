@@ -1,5 +1,5 @@
-#ifndef LFU_INCLUDE_LFU_HPP
-#define LFU_INCLUDE_LFU_HPP
+#ifndef INCLUDE_LFU_HPP
+#define INCLUDE_LFU_HPP
 
 #include <list>
 #include <unordered_map>
@@ -109,4 +109,4 @@ private:
 
 } // namespace yLab
 
-#endif // LFU_INCLUDE_LFU_HPP
+#endif // INCLUDE_LFU_HPP

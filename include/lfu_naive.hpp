@@ -1,5 +1,5 @@
-#ifndef LFU_INCLUDE_LFU_NAIVE_HPP
-#define LFU_INCLUDE_LFU_NAIVE_HPP
+#ifndef INCLUDE_LFU_NAIVE_HPP
+#define INCLUDE_LFU_NAIVE_HPP
 
 #include <vector>
 #include <iterator>
@@ -76,4 +76,4 @@ private:
 
 } // namespace yLab
 
-#endif // LFU_INCLUDE_LFU_NAIVE_HPP
+#endif // INCLUDE_LFU_NAIVE_HPP

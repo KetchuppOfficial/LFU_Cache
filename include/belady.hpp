@@ -1,5 +1,5 @@
-#ifndef BELADY_INCLUDE_BELADY_HPP
-#define BELADY_INCLUDE_BELADY_HPP
+#ifndef INCLUDE_BELADY_HPP
+#define INCLUDE_BELADY_HPP
 
 #include <list>
 #include <unordered_map>
@@ -147,4 +147,4 @@ private:
 
 } // namespace yLab
 
-#endif // BELADY_INCLUDE_BELADY_HPP
+#endif // INCLUDE_BELADY_HPP
