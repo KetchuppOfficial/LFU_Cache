@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.15)
 
 project(HWC
         LANGUAGES CXX)
@@ -15,5 +15,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX .)
 endif()
 
-add_subdirectory(lfu)
-add_subdirectory(belady)
+set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+
+add_subdirectory(tests)

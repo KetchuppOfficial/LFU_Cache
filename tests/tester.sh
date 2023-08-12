@@ -4,7 +4,7 @@ green="\033[1;32m"
 red="\033[1;31m"
 default="\033[0m"
 
-test_dir="tests/"
+test_dir="data/"
 
 function Mkdir
 {
@@ -14,8 +14,8 @@ function Mkdir
 
 function Run_Tests
 {
-    local fast="../build/${cache}/fast/${cache}"
-    local naive="../build/${cache}/naive/${cache}_naive"
+    local fast="../build/tests/${cache}"
+    local naive="../build/tests/${cache}_naive"
 
     local ans_dir="answers_${cache}/"
     local res_dir="results_${cache}/"
@@ -60,10 +60,10 @@ else
             n_tests=$2
             python3 test_generator.py $n_tests $test_dir
             echo -en "\n"
-            
+
             Mkdir answers_${cache}
             Mkdir results_${cache}
-                        
+
             echo "Building ${cache} cache..."
             cmake .. -B ../build
             cmake --build ../build --target ${cache}

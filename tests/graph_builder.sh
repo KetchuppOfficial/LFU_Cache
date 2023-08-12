@@ -1,6 +1,6 @@
 #!/bin/bash
 
-test_dir="tests/"
+test_dir="data/"
 
 function Mkdir
 {
@@ -11,7 +11,7 @@ function Mkdir
 function Run_Cache ()
 {
     local cache=$1
-    local fast="../build/${cache}/fast/${cache}"
+    local fast="../build/tests/${cache}"
     local data_dir="${cache}_data/"
 
     Mkdir $data_dir
