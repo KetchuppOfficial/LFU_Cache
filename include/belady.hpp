@@ -12,8 +12,6 @@
 namespace yLab
 {
 
-constexpr int no_next = -1;
-
 template<typename Key_T>
 class Occurrence_Table final
 {
@@ -21,11 +19,13 @@ class Occurrence_Table final
 
 public:
 
+    static constexpr int no_next = -1;
+
     template<typename key_iterator>
     Occurrence_Table (key_iterator begin, key_iterator end) : table_{}
     {
-        std::for_each (begin, end, [this, index = 0](const Key_T &key) mutable
-                                   { add (key, index); index++; });
+        std::for_each (begin, end,
+                       [this, index = 0](const Key_T &key) mutable { add (key, index++); });
 
         for (auto &bucket : table_)
         {
@@ -85,13 +85,13 @@ public:
         {
             auto input_next_occurrence = occurrence_table_.first (key);
 
-            if (input_next_occurrence != no_next)
+            if (input_next_occurrence != Occurrence_Table<key_type>::no_next)
             {
                 if (is_full())
                 {
                     auto [iter, next_occurrence] = find_key_with_latest_occurrence ();
 
-                    if (next_occurrence != no_next &&
+                    if (next_occurrence != Occurrence_Table<key_type>::no_next &&
                         next_occurrence < input_next_occurrence)
                     {
                         occurrence_table_.pop_first (key);
@@ -132,7 +132,7 @@ private:
         {
             auto next_occurence = occurrence_table_.first (node_iter->second);
 
-            if (next_occurence == no_next)
+            if (next_occurence == Occurrence_Table<key_type>::no_next)
                 return std::pair{node_iter, next_occurence};
             else if (next_occurence > latest_occurrence)
             {

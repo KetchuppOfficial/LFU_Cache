@@ -26,13 +26,13 @@ class LFU final
         std::list<Freq_Node>::iterator parent;
     };
 
-    using page_iterator = typename std::list<Page_Node>::iterator;
-
     struct Freq_Node
     {
         int counter;
         std::list<Page_Node> node_list;
     };
+
+    using page_iterator = typename std::list<Page_Node>::iterator;
 
     std::list<Freq_Node> freq_list_;
     std::unordered_map<key_type, page_iterator> hash_table_;
@@ -102,7 +102,7 @@ private:
         next_list.splice (next_list.end(), freq->node_list, page_it);
         page_it->parent = next_freq;
 
-        if (freq->node_list.size() == 0)
+        if (freq->node_list.empty())
             freq_list_.erase (freq);
     }
 };

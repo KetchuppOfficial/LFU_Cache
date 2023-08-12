@@ -58,8 +58,7 @@ public:
 
 private:
 
-    using iterator = typename std::vector<Node>::iterator;
-    using const_iterator = typename std::vector<Node>::iterator;
+    using iterator = typename decltype(cache_)::iterator;
 
     iterator find_by_key (const key_type &key)
     {
