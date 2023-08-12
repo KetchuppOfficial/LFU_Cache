@@ -1,8 +1,10 @@
-#ifndef BELADY_INCLUDE_BELADY_NAIVE_HPP
-#define BELADY_INCLUDE_BELADY_NAIVE_HPP
+#ifndef INCLUDE_BELADY_NAIVE_HPP
+#define INCLUDE_BELADY_NAIVE_HPP
 
 #include <vector>
 #include <iterator>
+#include <utility>
+#include <algorithm>
 
 namespace yLab
 {
@@ -106,4 +108,4 @@ private:
 
 } // namespace yLab
 
-#endif // BELADY_INCLUDE_BELADY_NAIVE_HPP
+#endif // INCLUDE_BELADY_NAIVE_HPP

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 #ifdef NAIVE
 #include "lfu_naive.hpp"

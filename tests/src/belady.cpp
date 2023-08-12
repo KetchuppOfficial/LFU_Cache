@@ -1,6 +1,6 @@
 #include <iostream>
-#include <iterator>
 #include <stdexcept>
+#include <vector>
 
 #ifdef NAIVE
 #include "belady_naive.hpp"

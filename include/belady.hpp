@@ -7,6 +7,7 @@
 #include <deque>
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 namespace yLab
 {
