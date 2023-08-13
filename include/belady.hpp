@@ -130,14 +130,14 @@ private:
 
         for (auto end_iter = page_list_.end(); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurence = occurrence_table_.first (node_iter->second);
+            auto next_occurrence = occurrence_table_.first (node_iter->second);
 
-            if (next_occurence == Occurrence_Table<key_type>::no_next)
-                return std::pair{node_iter, next_occurence};
-            else if (next_occurence > latest_occurrence)
+            if (next_occurrence == Occurrence_Table<key_type>::no_next)
+                return std::pair{node_iter, next_occurrence};
+            else if (next_occurrence > latest_occurrence)
             {
                 latest_iter       = node_iter;
-                latest_occurrence = next_occurence;
+                latest_occurrence = next_occurrence;
             }
         }
 

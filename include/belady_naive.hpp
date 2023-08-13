@@ -43,7 +43,7 @@ public:
             return true;
         else
         {
-            auto input_next_occurrence = find_next_occurence (key);
+            auto input_next_occurrence = find_next_occurrence (key);
 
             if (input_next_occurrence != no_next)
             {
@@ -74,7 +74,7 @@ private:
                              [&key](auto &&node){ return node.second == key; });
     }
 
-    int find_next_occurence (const key_type &key) const
+    int find_next_occurrence (const key_type &key) const
     {
         auto it = std::find_if (input_iter_, end_, [&key](auto &&elem){ return elem == key; });
         if (it == end_)
@@ -91,14 +91,14 @@ private:
 
         for (auto end_iter = cache_.end(); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurence = find_next_occurence (node_iter->second);
+            auto next_occurrence = find_next_occurrence (node_iter->second);
 
-            if (next_occurence == no_next)
-                return std::pair{node_iter, next_occurence};
-            else if (next_occurence > latest_occurrence)
+            if (next_occurrence == no_next)
+                return std::pair{node_iter, next_occurrence};
+            else if (next_occurrence > latest_occurrence)
             {
                 latest_iter       = node_iter;
-                latest_occurrence = next_occurence;
+                latest_occurrence = next_occurrence;
             }
         }
 
