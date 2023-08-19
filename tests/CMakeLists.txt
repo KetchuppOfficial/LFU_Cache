@@ -3,10 +3,10 @@ add_executable(lfu_naive ./src/lfu.cpp)
 add_executable(belady ./src/belady.cpp)
 add_executable(belady_naive ./src/belady.cpp)
 
-target_compile_options(lfu_naive
-                       PRIVATE -DNAIVE)
-target_compile_options(belady_naive
-                       PRIVATE -DNAIVE)
+target_compile_definitions(lfu_naive
+                           PRIVATE NAIVE)
+target_compile_definitions(belady_naive
+                           PRIVATE NAIVE)
 
 target_include_directories(lfu
                            PRIVATE ${INCLUDE_DIR})
