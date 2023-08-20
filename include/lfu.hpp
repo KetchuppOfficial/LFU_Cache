@@ -23,7 +23,7 @@ class LFU final
     {
         Page_T page;
         key_type key;
-        std::list<Freq_Node>::iterator parent;
+        typename std::list<Freq_Node>::iterator parent;
     };
 
     struct Freq_Node
