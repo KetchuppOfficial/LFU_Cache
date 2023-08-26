@@ -15,11 +15,13 @@ class LFU final
 
     struct Freq_Node;
 
+    using freq_iterator = typename std::list<Freq_Node>::iterator;
+
     struct Page_Node
     {
         Page_T page_;
         key_type key_;
-        typename std::list<Freq_Node>::iterator parent_;
+        freq_iterator parent_;
     };
 
     struct Freq_Node
@@ -47,7 +49,7 @@ public:
     template<typename F>
     bool lookup_update (const key_type &key, F slow_get_page)
     {
-        auto hit = hash_table_.find (key);
+        hash_iterator hit = hash_table_.find (key);
 
         if (hit == hash_table_.end())
         {
@@ -66,28 +68,28 @@ private:
     template<typename F>
     void request_page (const key_type &key, F slow_get_page)
     {
-        auto lfu_freq_node = freq_list_.begin();
+        freq_iterator lfu_freq_node_it = freq_list_.begin();
 
         if (is_full())
         {
-            auto lfu_node = lfu_freq_node->node_list_.begin();
+            auto lfu_node = lfu_freq_node_it->node_list_.begin();
             hash_table_.erase (lfu_node->key_);
-            lfu_freq_node->node_list_.erase (lfu_node);
+            lfu_freq_node_it->node_list_.erase (lfu_node);
         }
 
-        if (lfu_freq_node->counter_ != 1)
-            lfu_freq_node = freq_list_.emplace (lfu_freq_node, 1);
+        if (lfu_freq_node_it->counter_ != 1)
+            lfu_freq_node_it = freq_list_.emplace (lfu_freq_node_it, 1);
 
-        auto &lfu_list = lfu_freq_node->node_list_;
+        auto &lfu_list = lfu_freq_node_it->node_list_;
 
-        lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node);
+        lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node_it);
         hash_table_[key] = std::prev (lfu_list.end());
     }
 
-    void access_cached (const hash_iterator hit)
+    void access_cached (hash_iterator hit)
     {
-        auto page_it = hit->second;
-        auto freq = page_it->parent_;
+        page_iterator page_it = hit->second;
+        freq_iterator freq = page_it->parent_;
         auto next_freq = std::next (freq);
 
         if (next_freq == freq_list_.end() || next_freq->counter_ != freq->counter_ + 1)
