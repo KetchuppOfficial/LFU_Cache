@@ -15,7 +15,6 @@ class LFU final
     using key_type = Key_T;
 
     size_type capacity_;
-    size_type size_ = 0;
 
     struct Freq_Node;
 
@@ -43,9 +42,9 @@ public:
 
     explicit LFU (size_type capacity) : capacity_{capacity} {}
 
-    size_type size () const { return size_; }
+    size_type size () const { return hash_table_.size(); }
 
-    bool is_full () const { return (size_ == capacity_); }
+    bool is_full () const { return (size() == capacity_); }
 
     template<typename F>
     bool lookup_update (const key_type &key, F slow_get_page)
@@ -76,7 +75,6 @@ private:
             auto lfu_node = lfu_freq_node->node_list.begin();
             hash_table_.erase (lfu_node->key);
             lfu_freq_node->node_list.erase (lfu_node);
-            size_--;
         }
 
         if (lfu_freq_node->counter != 1)
@@ -86,7 +84,6 @@ private:
 
         lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node);
         hash_table_[key] = std::prev (lfu_list.end());
-        size_++;
     }
 
     void access_cached (const hash_iterator hit)
