@@ -17,15 +17,15 @@ class LFU final
 
     struct Page_Node
     {
-        Page_T page;
-        key_type key;
-        typename std::list<Freq_Node>::iterator parent;
+        Page_T page_;
+        key_type key_;
+        typename std::list<Freq_Node>::iterator parent_;
     };
 
     struct Freq_Node
     {
-        int counter;
-        std::list<Page_Node> node_list;
+        int counter_;
+        std::list<Page_Node> node_list_;
     };
 
     using size_type = std::size_t;
@@ -70,15 +70,15 @@ private:
 
         if (is_full())
         {
-            auto lfu_node = lfu_freq_node->node_list.begin();
-            hash_table_.erase (lfu_node->key);
-            lfu_freq_node->node_list.erase (lfu_node);
+            auto lfu_node = lfu_freq_node->node_list_.begin();
+            hash_table_.erase (lfu_node->key_);
+            lfu_freq_node->node_list_.erase (lfu_node);
         }
 
-        if (lfu_freq_node->counter != 1)
+        if (lfu_freq_node->counter_ != 1)
             lfu_freq_node = freq_list_.emplace (lfu_freq_node, 1);
 
-        auto &lfu_list = lfu_freq_node->node_list;
+        auto &lfu_list = lfu_freq_node->node_list_;
 
         lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node);
         hash_table_[key] = std::prev (lfu_list.end());
@@ -87,17 +87,17 @@ private:
     void access_cached (const hash_iterator hit)
     {
         auto page_it = hit->second;
-        auto freq = page_it->parent;
+        auto freq = page_it->parent_;
         auto next_freq = std::next (freq);
 
-        if (next_freq == freq_list_.end() || next_freq->counter != freq->counter + 1)
-            next_freq = freq_list_.emplace (next_freq, freq->counter + 1);
+        if (next_freq == freq_list_.end() || next_freq->counter_ != freq->counter_ + 1)
+            next_freq = freq_list_.emplace (next_freq, freq->counter_ + 1);
 
-        auto &next_list = next_freq->node_list;
-        next_list.splice (next_list.end(), freq->node_list, page_it);
-        page_it->parent = next_freq;
+        auto &next_list = next_freq->node_list_;
+        next_list.splice (next_list.end(), freq->node_list_, page_it);
+        page_it->parent_ = next_freq;
 
-        if (freq->node_list.empty())
+        if (freq->node_list_.empty())
             freq_list_.erase (freq);
     }
 };
