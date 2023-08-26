@@ -11,10 +11,13 @@ namespace yLab
 template<typename Page_T, typename Key_T = int>
 class LFU_Naive final
 {
+public:
+
     using size_type = std::size_t;
     using key_type = Key_T;
+    using page_getter = std::function<Page_T(const key_type&)>;
 
-    size_type capacity_;
+private:
 
     struct Node
     {
@@ -23,18 +26,20 @@ class LFU_Naive final
         int counter_;
     };
 
+    size_type capacity_;
     std::vector<Node> cache_;
+    page_getter slow_get_page_;
 
 public:
 
-    explicit LFU_Naive (size_type capacity) : capacity_{capacity} {}
+    LFU_Naive (size_type capacity, page_getter slow_get_page)
+              : capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
     size_type size () const { return cache_.size(); }
 
     bool is_full () const { return (size() == capacity_); }
 
-    template<typename F>
-    bool lookup_update (const key_type &key, F slow_get_page)
+    bool lookup_update (const key_type &key)
     {
         auto hit = find_by_key (key);
 
@@ -43,7 +48,7 @@ public:
             if (is_full())
                 cache_.erase (find_min_freq());
 
-            cache_.emplace_back (slow_get_page (key), key, 1);
+            cache_.emplace_back (slow_get_page_(key), key, 1);
 
             return false;
         }

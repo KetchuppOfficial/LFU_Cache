@@ -21,10 +21,12 @@ int main ()
     if (!std::cin.good())
         throw std::runtime_error{"Error while reading the number of keys"};
 
+    auto slow_get_page = [](key_type key){ return key; };
+
     #ifdef NAIVE
-    yLab::LFU_Naive<key_type> cache{cache_size};
+    yLab::LFU_Naive<key_type> cache{cache_size, slow_get_page};
     #else
-    yLab::LFU<key_type> cache{cache_size};
+    yLab::LFU<key_type> cache{cache_size, slow_get_page};
     #endif
 
     auto n_hits = 0;
@@ -35,7 +37,7 @@ int main ()
         if (!std::cin.good())
             throw std::runtime_error{"Error while reading a key"};
 
-        n_hits += cache.lookup_update(key, [](key_type key){ return key; });
+        n_hits += cache.lookup_update (key);
     }
 
     std::cout << n_hits << std::endl;

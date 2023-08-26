@@ -4,6 +4,7 @@
 #include <list>
 #include <unordered_map>
 #include <iterator>
+#include <functional>
 
 namespace yLab
 {
@@ -11,7 +12,13 @@ namespace yLab
 template<typename Page_T, typename Key_T = int>
 class LFU final
 {
+public:
+
     using key_type = Key_T;
+    using size_type = std::size_t;
+    using page_getter = std::function<Page_T(const Key_T&)>;
+
+private:
 
     struct Freq_Node;
 
@@ -30,30 +37,30 @@ class LFU final
         std::list<Page_Node> node_list_;
     };
 
-    using size_type = std::size_t;
     using page_iterator = typename std::list<Page_Node>::iterator;
     using hash_iterator = typename std::unordered_map<key_type, page_iterator>::iterator;
 
     size_type capacity_;
     std::list<Freq_Node> freq_list_;
     std::unordered_map<key_type, page_iterator> hash_table_;
+    page_getter slow_get_page_;
 
 public:
 
-    explicit LFU (size_type capacity) : capacity_{capacity} {}
+    LFU (size_type capacity, page_getter slow_get_page)
+        : capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
     size_type size () const { return hash_table_.size(); }
 
     bool is_full () const { return (size() == capacity_); }
 
-    template<typename F>
-    bool lookup_update (const key_type &key, F slow_get_page)
+    bool lookup_update (const key_type &key)
     {
         hash_iterator hit = hash_table_.find (key);
 
         if (hit == hash_table_.end())
         {
-            request_page (key, slow_get_page);
+            request_page (key);
             return false;
         }
         else
@@ -65,8 +72,7 @@ public:
 
 private:
 
-    template<typename F>
-    void request_page (const key_type &key, F slow_get_page)
+    void request_page (const key_type &key)
     {
         freq_iterator lfu_freq_node_it = freq_list_.begin();
 
@@ -82,7 +88,7 @@ private:
 
         auto &lfu_list = lfu_freq_node_it->node_list_;
 
-        lfu_list.emplace_back (slow_get_page (key), key, lfu_freq_node_it);
+        lfu_list.emplace_back (slow_get_page_(key), key, lfu_freq_node_it);
         hash_table_[key] = std::prev (lfu_list.end());
     }
 
