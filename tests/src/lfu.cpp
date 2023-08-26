@@ -10,6 +10,7 @@
 int main ()
 {
     using key_type = int;
+    using page_type = key_type;
 
     std::size_t cache_size;
     std::cin >> cache_size;
@@ -24,9 +25,9 @@ int main ()
     auto slow_get_page = [](key_type key){ return key; };
 
     #ifdef NAIVE
-    yLab::LFU_Naive<key_type> cache{cache_size, slow_get_page};
+    yLab::LFU_Naive<key_type, page_type> cache{cache_size, slow_get_page};
     #else
-    yLab::LFU<key_type> cache{cache_size, slow_get_page};
+    yLab::LFU<key_type, page_type> cache{cache_size, slow_get_page};
     #endif
 
     auto n_hits = 0;

@@ -9,14 +9,15 @@
 namespace yLab
 {
 
-template<typename Page_T, typename Key_T = int>
+template<typename Key_T, typename Page_T>
 class LFU final
 {
 public:
 
     using key_type = Key_T;
+    using page_type = Page_T;
     using size_type = std::size_t;
-    using page_getter = std::function<Page_T(const Key_T&)>;
+    using page_getter = std::function<page_type (const key_type&)>;
 
 private:
 
@@ -26,8 +27,8 @@ private:
 
     struct Page_Node
     {
-        Page_T page_;
         key_type key_;
+        page_type page_;
         freq_iterator parent_;
     };
 
@@ -88,7 +89,7 @@ private:
 
         auto &lfu_list = lfu_freq_node_it->node_list_;
 
-        lfu_list.emplace_back (slow_get_page_(key), key, lfu_freq_node_it);
+        lfu_list.emplace_back (key, slow_get_page_(key), lfu_freq_node_it);
         hash_table_[key] = std::prev (lfu_list.end());
     }
 

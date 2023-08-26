@@ -8,21 +8,22 @@
 namespace yLab
 {
 
-template<typename Page_T, typename Key_T = int>
+template<typename Key_T, typename Page_T>
 class LFU_Naive final
 {
 public:
 
-    using size_type = std::size_t;
     using key_type = Key_T;
-    using page_getter = std::function<Page_T(const key_type&)>;
+    using page_type = Page_T;
+    using size_type = std::size_t;
+    using page_getter = std::function<page_type(const key_type&)>;
 
 private:
 
     struct Node
     {
-        Page_T page_;
         key_type key_;
+        page_type page_;
         int counter_;
     };
 
@@ -48,7 +49,7 @@ public:
             if (is_full())
                 cache_.erase (find_min_freq());
 
-            cache_.emplace_back (slow_get_page_(key), key, 1);
+            cache_.emplace_back (key, slow_get_page_(key), 1);
 
             return false;
         }
