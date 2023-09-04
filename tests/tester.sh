@@ -73,7 +73,7 @@ else
             Run_Tests
 
         else
-            "There is no testing mode with name $2"
+            echo "There is no testing mode with name $2"
         fi
     fi
 fi
