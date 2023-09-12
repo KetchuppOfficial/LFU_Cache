@@ -55,7 +55,7 @@ public:
 
     size_type size () const { return hash_table_.size(); }
 
-    bool is_full () const { return (size() == capacity_); }
+    bool is_full () const { return size() == capacity_; }
 
     bool lookup_update (const key_type &key)
     {
