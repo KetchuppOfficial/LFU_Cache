@@ -84,7 +84,7 @@ private:
             lfu_freq_node_it->node_list_.erase (lfu_node);
         }
 
-        if (lfu_freq_node_it->counter_ != 1)
+        if (lfu_freq_node_it == freq_list_.end() || lfu_freq_node_it->counter_ != 1)
             lfu_freq_node_it = freq_list_.emplace (lfu_freq_node_it, 1);
 
         auto &lfu_list = lfu_freq_node_it->node_list_;
