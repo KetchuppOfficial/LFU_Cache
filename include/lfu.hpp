@@ -101,8 +101,8 @@ private:
     {
         page_iterator page_it = hit->second;
         freq_iterator freq_it = page_it->parent_;
-        auto next_freq = std::next (freq_it);
 
+        auto next_freq = std::next (freq_it);
         if (next_freq == freq_list_.end() || next_freq->counter_ != freq_it->counter_ + 1)
             next_freq = freq_list_.emplace (next_freq, freq_it->counter_ + 1);
 
