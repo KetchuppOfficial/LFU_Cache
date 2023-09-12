@@ -100,18 +100,18 @@ private:
     void access_cached (hash_iterator hit)
     {
         page_iterator page_it = hit->second;
-        freq_iterator freq = page_it->parent_;
-        auto next_freq = std::next (freq);
+        freq_iterator freq_it = page_it->parent_;
+        auto next_freq = std::next (freq_it);
 
-        if (next_freq == freq_list_.end() || next_freq->counter_ != freq->counter_ + 1)
-            next_freq = freq_list_.emplace (next_freq, freq->counter_ + 1);
+        if (next_freq == freq_list_.end() || next_freq->counter_ != freq_it->counter_ + 1)
+            next_freq = freq_list_.emplace (next_freq, freq_it->counter_ + 1);
 
         auto &next_list = next_freq->node_list_;
-        next_list.splice (next_list.end(), freq->node_list_, page_it);
+        next_list.splice (next_list.end(), freq_it->node_list_, page_it);
         page_it->parent_ = next_freq;
 
-        if (freq->node_list_.empty())
-            freq_list_.erase (freq);
+        if (freq_it->node_list_.empty())
+            freq_list_.erase (freq_it);
     }
 };
 
