@@ -79,9 +79,11 @@ private:
 
         if (is_full())
         {
-            auto lfu_node_it = lfu_freq_node_it->node_list_.begin();
+            auto &lfu_list = lfu_freq_node_it->node_list_;
+            auto lfu_node_it = lfu_list.begin();
+
             hash_table_.erase (lfu_node_it->key_);
-            lfu_freq_node_it->node_list_.erase (lfu_node_it);
+            lfu_list.erase (lfu_node_it);
         }
 
         if (lfu_freq_node_it == freq_list_.end() || lfu_freq_node_it->counter_ != 1)
