@@ -36,6 +36,8 @@ private:
     {
         int counter_;
         std::list<Page_Node> node_list_;
+
+        explicit Freq_Node (int counter) : counter_{counter} {}
     };
 
     using page_iterator = typename std::list<Page_Node>::iterator;
