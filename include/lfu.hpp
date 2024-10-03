@@ -28,17 +28,17 @@ private:
 
     struct Page_Node
     {
-        key_type key_;
-        page_type page_;
-        freq_iterator parent_;
+        key_type key;
+        page_type page;
+        freq_iterator parent;
     };
 
     struct Freq_Node
     {
-        int counter_;
-        std::list<Page_Node> node_list_;
+        std::list<Page_Node> node_list;
+        int counter;
 
-        explicit Freq_Node(int counter) : counter_{counter} {}
+        explicit Freq_Node(int c) : counter{c} {}
     };
 
     using page_iterator = typename std::list<Page_Node>::iterator;
@@ -54,9 +54,9 @@ public:
     LFU(size_type capacity, page_getter slow_get_page)
         : capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
-    size_type size() const { return hash_table_.size(); }
+    size_type size() const noexcept { return hash_table_.size(); }
 
-    bool is_full() const { return size() == capacity_; }
+    bool is_full() const noexcept { return size() == capacity_; }
 
     bool lookup_update(const key_type &key)
     {
@@ -82,17 +82,17 @@ private:
 
         if (is_full())
         {
-            auto &lfu_list = lfu_freq_node_it->node_list_;
+            auto &lfu_list = lfu_freq_node_it->node_list;
             auto lfu_node_it = lfu_list.begin();
 
-            hash_table_.erase(lfu_node_it->key_);
+            hash_table_.erase(lfu_node_it->key);
             lfu_list.erase(lfu_node_it);
         }
 
-        if (lfu_freq_node_it == freq_list_.end() || lfu_freq_node_it->counter_ != 1)
+        if (lfu_freq_node_it == freq_list_.end() || lfu_freq_node_it->counter != 1)
             lfu_freq_node_it = freq_list_.emplace(lfu_freq_node_it, 1);
 
-        auto &lfu_list = lfu_freq_node_it->node_list_;
+        auto &lfu_list = lfu_freq_node_it->node_list;
 
         lfu_list.emplace_back(key, slow_get_page_(key), lfu_freq_node_it);
         hash_table_[key] = std::prev(lfu_list.end());
@@ -101,17 +101,17 @@ private:
     void access_cached(hash_iterator hit)
     {
         page_iterator page_it = hit->second;
-        freq_iterator freq_it = page_it->parent_;
+        freq_iterator freq_it = page_it->parent;
 
         auto next_freq = std::next(freq_it);
-        if (next_freq == freq_list_.end() || next_freq->counter_ != freq_it->counter_ + 1)
-            next_freq = freq_list_.emplace(next_freq, freq_it->counter_ + 1);
+        if (next_freq == freq_list_.end() || next_freq->counter != freq_it->counter + 1)
+            next_freq = freq_list_.emplace(next_freq, freq_it->counter + 1);
 
-        auto &next_list = next_freq->node_list_;
-        next_list.splice(next_list.end(), freq_it->node_list_, page_it);
-        page_it->parent_ = next_freq;
+        auto &next_list = next_freq->node_list;
+        next_list.splice(next_list.end(), freq_it->node_list, page_it);
+        page_it->parent = next_freq;
 
-        if (freq_it->node_list_.empty())
+        if (freq_it->node_list.empty())
             freq_list_.erase(freq_it);
     }
 };

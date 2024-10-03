@@ -5,64 +5,70 @@
 #include <iterator>
 #include <utility>
 #include <vector>
+#include <deque>
 #include <algorithm>
+#include <functional>
 
 namespace yLab
 {
 
-template<typename Key_Iter, typename Page_T = int>
+template<typename Key_T, typename Page_T>
 class Ideal_Cache_Naive final
 {
     using size_type = std::size_t;
-    using key_iterator = Key_Iter;
-    using key_type = typename std::iterator_traits<key_iterator>::value_type;
-    using node_type = typename std::pair<Page_T, key_type>;
+    using key_type = Key_T;
+    using page_type = Page_T;
+    using node_type = typename std::pair<key_type, page_type>;
     using const_iterator = typename std::vector<node_type>::const_iterator;
+    using page_getter = std::function<page_type (const key_type&)>;
 
-    size_type capacity_;
     std::vector<node_type> cache_;
-    key_iterator input_iter_;
-    key_iterator end_;
+    std::deque<key_type> input_;
+    size_type capacity_;
+    page_getter slow_get_page_;
 
 public:
 
-    Ideal_Cache_Naive(size_type capacity, key_iterator begin, key_iterator end)
-        : capacity_{capacity}, input_iter_{begin}, end_{end} {}
+    template<std::forward_iterator It>
+    requires std::convertible_to<typename std::iterator_traits<It>::value_type, key_type>
+    Ideal_Cache_Naive(size_type capacity, page_getter slow_get_page, It begin, It end)
+        : input_(begin, end), capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
-    size_type size() const { return cache_.size(); }
+    size_type size() const noexcept { return cache_.size(); }
 
-    bool is_full() const { return size() == capacity_; }
+    bool is_full() const noexcept { return size() == capacity_; }
 
     bool contains(const key_type &key) const { return find_by_key(key) != cache_.end(); }
 
-    template <typename F>
-    bool lookup_update(F slow_get_page)
+    bool lookup_update()
     {
-        auto key {*input_iter_++};
+        if (input_.empty())
+            return false;
+
+        const auto key = std::move(input_.front());
+        input_.pop_front();
 
         if (contains(key))
             return true;
-        else
+
+        auto input_next_occurrence = find_next_occurrence(key);
+
+        if (input_next_occurrence != no_next)
         {
-            auto input_next_occurrence = find_next_occurrence(key);
-
-            if (input_next_occurrence != no_next)
+            if (is_full())
             {
-                if (is_full())
-                {
-                    auto [iter, next_occurrence] = find_key_with_latest_occurrence();
+                auto [iter, next_occurrence] = find_key_with_latest_occurrence();
 
-                    if (next_occurrence != no_next && next_occurrence < input_next_occurrence)
-                        return false;
-                    else
-                        cache_.erase(iter);
-                }
-
-                cache_.emplace_back(slow_get_page(key), key);
+                if (next_occurrence != no_next && next_occurrence < input_next_occurrence)
+                    return false;
+                else
+                    cache_.erase(iter);
             }
 
-            return false;
+            cache_.emplace_back(key, slow_get_page_(key));
         }
+
+        return false;
     }
 
 private:
@@ -71,34 +77,33 @@ private:
 
     const_iterator find_by_key(const key_type &key) const
     {
-        return std::find_if(cache_.begin(), cache_.end(),
-                            [&key](auto &&node){ return node.second == key; });
+        return std::ranges::find(cache_, key, &node_type::first);
     }
 
     int find_next_occurrence(const key_type &key) const
     {
-        auto it = std::find_if(input_iter_, end_, [&key](auto &&elem){ return elem == key; });
-        if (it == end_)
+        auto it = std::ranges::find(input_, key);
+        if (it == input_.end())
             return no_next;
         else
-            return 1 + static_cast<int>(std::distance(input_iter_, it));
+            return 1 + static_cast<int>(std::distance(input_.begin(), it));
     }
 
     std::pair<const_iterator, int> find_key_with_latest_occurrence() const
     {
-        auto latest_occurrence = 0;
+        int latest_occurrence = 0;
         auto node_iter = cache_.begin();
         auto latest_iter = node_iter;
 
         for (auto end_iter = cache_.end(); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurrence = find_next_occurrence(node_iter->second);
+            int next_occurrence = find_next_occurrence(node_iter->second);
 
             if (next_occurrence == no_next)
                 return std::pair{node_iter, next_occurrence};
             else if (next_occurrence > latest_occurrence)
             {
-                latest_iter       = node_iter;
+                latest_iter = node_iter;
                 latest_occurrence = next_occurrence;
             }
         }
