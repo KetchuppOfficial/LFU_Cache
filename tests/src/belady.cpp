@@ -9,7 +9,7 @@
 #include "belady.hpp"
 #endif
 
-int main ()
+int main()
 {
     using key_type = int;
 
@@ -24,7 +24,7 @@ int main ()
         throw std::runtime_error{"Error while reading the number of keys"};
 
     std::vector<key_type> keys_arr;
-    keys_arr.reserve (n_keys);
+    keys_arr.reserve(n_keys);
     for (auto key_i = 0; key_i != n_keys; ++key_i)
     {
         key_type key;
@@ -32,7 +32,7 @@ int main ()
         if (!std::cin.good())
             throw std::runtime_error{"Error while reading a key"};
 
-        keys_arr.emplace_back (key);
+        keys_arr.emplace_back(key);
     }
 
     #ifdef NAIVE

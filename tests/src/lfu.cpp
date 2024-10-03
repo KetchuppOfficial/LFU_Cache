@@ -8,7 +8,7 @@
 #include "lfu.hpp"
 #endif
 
-int main ()
+int main()
 {
     using key_type = int;
     using page_type = key_type;
@@ -39,7 +39,7 @@ int main ()
         if (!std::cin.good())
             throw std::runtime_error{"Error while reading a key"};
 
-        n_hits += cache.lookup_update (key);
+        n_hits += cache.lookup_update(key);
     }
 
     std::cout << n_hits << std::endl;

@@ -26,25 +26,25 @@ class Ideal_Cache_Naive final
 
 public:
 
-    Ideal_Cache_Naive (size_type capacity, key_iterator begin, key_iterator end)
-                      : capacity_{capacity}, input_iter_{begin}, end_{end} {}
+    Ideal_Cache_Naive(size_type capacity, key_iterator begin, key_iterator end)
+        : capacity_{capacity}, input_iter_{begin}, end_{end} {}
 
-    size_type size () const { return cache_.size(); }
+    size_type size() const { return cache_.size(); }
 
-    bool is_full () const { return (size() == capacity_); }
+    bool is_full() const { return size() == capacity_; }
 
-    bool contains (const key_type &key) const { return find_by_key (key) != cache_.end(); }
+    bool contains(const key_type &key) const { return find_by_key(key) != cache_.end(); }
 
     template <typename F>
-    bool lookup_update (F slow_get_page)
+    bool lookup_update(F slow_get_page)
     {
         auto key {*input_iter_++};
 
-        if (contains (key))
+        if (contains(key))
             return true;
         else
         {
-            auto input_next_occurrence = find_next_occurrence (key);
+            auto input_next_occurrence = find_next_occurrence(key);
 
             if (input_next_occurrence != no_next)
             {
@@ -55,10 +55,10 @@ public:
                     if (next_occurrence != no_next && next_occurrence < input_next_occurrence)
                         return false;
                     else
-                        cache_.erase (iter);
+                        cache_.erase(iter);
                 }
 
-                cache_.emplace_back (slow_get_page (key), key);
+                cache_.emplace_back(slow_get_page(key), key);
             }
 
             return false;
@@ -69,22 +69,22 @@ private:
 
     static constexpr int no_next = -1;
 
-    const_iterator find_by_key (const key_type &key) const
+    const_iterator find_by_key(const key_type &key) const
     {
-        return std::find_if (cache_.begin(), cache_.end(),
-                             [&key](auto &&node){ return node.second == key; });
+        return std::find_if(cache_.begin(), cache_.end(),
+                            [&key](auto &&node){ return node.second == key; });
     }
 
-    int find_next_occurrence (const key_type &key) const
+    int find_next_occurrence(const key_type &key) const
     {
-        auto it = std::find_if (input_iter_, end_, [&key](auto &&elem){ return elem == key; });
+        auto it = std::find_if(input_iter_, end_, [&key](auto &&elem){ return elem == key; });
         if (it == end_)
             return no_next;
         else
-            return 1 + static_cast<int>(std::distance (input_iter_, it));
+            return 1 + static_cast<int>(std::distance(input_iter_, it));
     }
 
-    std::pair<const_iterator, int> find_key_with_latest_occurrence () const
+    std::pair<const_iterator, int> find_key_with_latest_occurrence() const
     {
         auto latest_occurrence = 0;
         auto node_iter = cache_.begin();
@@ -92,7 +92,7 @@ private:
 
         for (auto end_iter = cache_.end(); node_iter != end_iter; ++node_iter)
         {
-            auto next_occurrence = find_next_occurrence (node_iter->second);
+            auto next_occurrence = find_next_occurrence(node_iter->second);
 
             if (next_occurrence == no_next)
                 return std::pair{node_iter, next_occurrence};

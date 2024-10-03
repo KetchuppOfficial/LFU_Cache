@@ -38,7 +38,7 @@ private:
         int counter_;
         std::list<Page_Node> node_list_;
 
-        explicit Freq_Node (int counter) : counter_{counter} {}
+        explicit Freq_Node(int counter) : counter_{counter} {}
     };
 
     using page_iterator = typename std::list<Page_Node>::iterator;
@@ -51,32 +51,32 @@ private:
 
 public:
 
-    LFU (size_type capacity, page_getter slow_get_page)
+    LFU(size_type capacity, page_getter slow_get_page)
         : capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
-    size_type size () const { return hash_table_.size(); }
+    size_type size() const { return hash_table_.size(); }
 
-    bool is_full () const { return size() == capacity_; }
+    bool is_full() const { return size() == capacity_; }
 
-    bool lookup_update (const key_type &key)
+    bool lookup_update(const key_type &key)
     {
-        hash_iterator hit = hash_table_.find (key);
+        hash_iterator hit = hash_table_.find(key);
 
         if (hit == hash_table_.end())
         {
-            request_page (key);
+            request_page(key);
             return false;
         }
         else
         {
-            access_cached (hit);
+            access_cached(hit);
             return true;
         }
     }
 
 private:
 
-    void request_page (const key_type &key)
+    void request_page(const key_type &key)
     {
         freq_iterator lfu_freq_node_it = freq_list_.begin();
 
@@ -85,34 +85,34 @@ private:
             auto &lfu_list = lfu_freq_node_it->node_list_;
             auto lfu_node_it = lfu_list.begin();
 
-            hash_table_.erase (lfu_node_it->key_);
-            lfu_list.erase (lfu_node_it);
+            hash_table_.erase(lfu_node_it->key_);
+            lfu_list.erase(lfu_node_it);
         }
 
         if (lfu_freq_node_it == freq_list_.end() || lfu_freq_node_it->counter_ != 1)
-            lfu_freq_node_it = freq_list_.emplace (lfu_freq_node_it, 1);
+            lfu_freq_node_it = freq_list_.emplace(lfu_freq_node_it, 1);
 
         auto &lfu_list = lfu_freq_node_it->node_list_;
 
-        lfu_list.emplace_back (key, slow_get_page_(key), lfu_freq_node_it);
-        hash_table_[key] = std::prev (lfu_list.end());
+        lfu_list.emplace_back(key, slow_get_page_(key), lfu_freq_node_it);
+        hash_table_[key] = std::prev(lfu_list.end());
     }
 
-    void access_cached (hash_iterator hit)
+    void access_cached(hash_iterator hit)
     {
         page_iterator page_it = hit->second;
         freq_iterator freq_it = page_it->parent_;
 
-        auto next_freq = std::next (freq_it);
+        auto next_freq = std::next(freq_it);
         if (next_freq == freq_list_.end() || next_freq->counter_ != freq_it->counter_ + 1)
-            next_freq = freq_list_.emplace (next_freq, freq_it->counter_ + 1);
+            next_freq = freq_list_.emplace(next_freq, freq_it->counter_ + 1);
 
         auto &next_list = next_freq->node_list_;
-        next_list.splice (next_list.end(), freq_it->node_list_, page_it);
+        next_list.splice(next_list.end(), freq_it->node_list_, page_it);
         page_it->parent_ = next_freq;
 
         if (freq_it->node_list_.empty())
-            freq_list_.erase (freq_it);
+            freq_list_.erase(freq_it);
     }
 };
 
