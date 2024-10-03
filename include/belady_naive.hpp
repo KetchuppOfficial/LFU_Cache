@@ -1,9 +1,10 @@
 #ifndef INCLUDE_BELADY_NAIVE_HPP
 #define INCLUDE_BELADY_NAIVE_HPP
 
-#include <vector>
+#include <cstddef>
 #include <iterator>
 #include <utility>
+#include <vector>
 #include <algorithm>
 
 namespace yLab

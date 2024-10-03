@@ -1,6 +1,8 @@
 #ifndef INCLUDE_LFU_NAIVE_HPP
 #define INCLUDE_LFU_NAIVE_HPP
 
+#include <cstddef>
+#include <functional>
 #include <vector>
 #include <iterator>
 #include <algorithm>
