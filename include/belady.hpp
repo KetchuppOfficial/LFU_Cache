@@ -69,8 +69,8 @@ public:
     template<std::forward_iterator It>
     requires std::convertible_to<typename std::iterator_traits<It>::value_type, key_type>
     Ideal_Cache(std::size_t capacity, page_getter slow_get_page, It begin, It end)
-        : input_(begin, end), occurrence_table_{begin, end}, capacity_{capacity},
-          slow_get_page_{slow_get_page} {}
+        : hash_table_(capacity), input_(begin, end), occurrence_table_{begin, end},
+          capacity_{capacity}, slow_get_page_{slow_get_page} {}
 
     size_type size() const noexcept { return page_list_.size(); }
 

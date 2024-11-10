@@ -32,7 +32,10 @@ public:
     template<std::forward_iterator It>
     requires std::convertible_to<typename std::iterator_traits<It>::value_type, key_type>
     Ideal_Cache_Naive(size_type capacity, page_getter slow_get_page, It begin, It end)
-        : input_(begin, end), capacity_{capacity}, slow_get_page_{slow_get_page} {}
+        : input_(begin, end), capacity_{capacity}, slow_get_page_{slow_get_page}
+    {
+        cache_.reserve(capacity);
+    }
 
     size_type size() const noexcept { return cache_.size(); }
 

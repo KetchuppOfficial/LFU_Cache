@@ -52,7 +52,7 @@ private:
 public:
 
     LFU(size_type capacity, page_getter slow_get_page)
-        : capacity_{capacity}, slow_get_page_{slow_get_page} {}
+        : capacity_{capacity}, hash_table_(capacity), slow_get_page_{slow_get_page} {}
 
     size_type size() const noexcept { return hash_table_.size(); }
 
